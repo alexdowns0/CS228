@@ -1,6 +1,7 @@
 var controllerOptions = {};
-
-Leap.loop(controllerOptions, function(frame) {
- 
+var i = 2;
+Leap.loop(controllerOptions, function(frame) 
+{
+	console.log(i)
 }
 );
