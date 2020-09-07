@@ -5,7 +5,8 @@ var x = 1272;
 // browser height
 var y = 680;
 
-function HandleFrame(frame){
+function HandleFrame(frame)
+{
 	// clear();
 	// circle(x, y, 25);
 	// randNumX = (Math.random() * 2) - 1;
@@ -13,29 +14,41 @@ function HandleFrame(frame){
 	// x += randNumX;
 	// y += randNumY;
 	
-	if(frame.hands.length == 1){
+	if(frame.hands.length == 1)
+	{
 		
-		var hands = frame.hands[0];
-		var fingers = hands.fingers;
+		var hand = frame.hands[0];
+		return HandleHand(hand);	
+	}
+}
+
+function HandleHand(hand)
+{
+	var finger = hand.fingers;
 	
+	return HandleFinger(finger);
 
-		var arrayLength = fingers.length;
+}
 
-		for (var i = 0; i < arrayLength; i++){
-			current = fingers[i];
+function HandleFinger(finger)
+{
+	var arrayLength = finger.length;
+
+		for (var i = 0; i < arrayLength; i++)
+		{
+			current = finger[i];
 			if(current.type == 1)
 			{
 		    	return console.log(current);
 			}
 		}
-
-		
-	}
 }
+
 Leap.loop(controllerOptions, function(frame) 
 {
 			
 	HandleFrame(frame);
+	
 }
 	
 	
