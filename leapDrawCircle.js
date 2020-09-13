@@ -2,10 +2,10 @@ var controllerOptions = {};
 
 
 
-var rawXMin = 4000;
-var rawXMax = -4000;
-var rawYMin = 4000;
-var rawYMax = -4000;
+var rawXMin = 2000;
+var rawXMax = -2000;
+var rawYMin = 2000;
+var rawYMax = -2000;
 
 var newXMax = 0;
 var newXMin = window.innerWidth;
@@ -80,7 +80,7 @@ function HandleFinger(finger)
 
 		    	newY = window.innerHeight - newY;
 
-		    	return circle(newX, newY, 25);
+		    	return circle(newX, newY, 50);
 
 			}
 		}
