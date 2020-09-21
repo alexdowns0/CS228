@@ -49,6 +49,19 @@ function HandleHand(hand)
 	
 //  }
 
+
+function TransformCoordinates (xb, yb)
+{
+
+	yb = window.innerHeight - yb;
+		    	
+	xb = (((xb - rawXMin) * (newXMax - newXMin)) / (rawXMax - rawXMin)) + newXMin;
+		    	
+	yb = (((yb - rawYMin) * (newYMax - newYMin)) / (rawYMax - rawYMin)) + newYMin;
+
+	return [xb,yb];
+}
+
 function HandleBone(bone)
 {
 	var boneType = ["metacarpal", "proximal phalange", "intermediate phalange", "distal phalange"];
@@ -60,14 +73,16 @@ function HandleBone(bone)
 	//console.log(b, bonePreviousJ, boneNextJ);
 	
 
-	var x1 = boneNextJ[0];
-	var y1 = boneNextJ[1];
-	var z1 = boneNextJ[2];
-	var x2 = bonePreviousJ[0];
-	var y2 = bonePreviousJ[1];
-	var z2 = bonePreviousJ[2];
+	var xb = boneNextJ[0];
+	var yb = boneNextJ[1];
+	var zb = boneNextJ[2];
+	[xb,yb] = TransformCoordinates(xb,yb);
+	var xt = bonePreviousJ[0];
+	var yt = bonePreviousJ[1];
+	var zt = bonePreviousJ[2];
+	[xt,yt] = TransformCoordinates(xt,yt);
 
-	console.log(b, x1, y1, z1);
+	//console.log(b, x1, y1, z1);
 
 	if(boneNextJ[0] < rawXMin)
 	{
@@ -90,15 +105,15 @@ function HandleBone(bone)
 		rawYMax = boneNextJ[1];
 	}
 
-	y1 = window.innerHeight - y1;
+	// yt = window.innerHeight - y1;
 		    	
-	x1 = (((x1 - rawXMin) * (newXMax - newXMin)) / (rawXMax - rawXMin)) + newXMin;
+	// xt = (((x1 - rawXMin) * (newXMax - newXMin)) / (rawXMax - rawXMin)) + newXMin;
 		    	
-	y1 = (((y1 - rawYMin) * (newYMax - newYMin)) / (rawYMax - rawYMin)) + newYMin;
+	// yt = (((y1 - rawYMin) * (newYMax - newYMin)) / (rawYMax - rawYMin)) + newYMin;
 
 	
-
-	line(x1,y1,x2,y2);
+	console.log(xb,yb);
+	line(xb,yb,xt,yt);
 	//return circle(x1, y1, 25);
 
 }
