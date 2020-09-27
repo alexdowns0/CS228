@@ -10,21 +10,26 @@ var newXMin = 0;
 var newYMax = window.innerHeight;
 var newYMin = 0;
 
+// tracking variables
+var previousNumHands = 0;
+var currentNumHands = 0;
+
 // tracker variable to count loop iterations 
 var b = 0;
 
 // HandleFrame function, returns first hand that is within frame 
 function HandleFrame(frame)
 {
-	if(frame.hands.length == 1)
+	// if statement to determine how many hands are in frame 
+	if(frame.hands.length == 1 || frame.hands.length == 2)
 	{	
 		var hand = frame.hands[0];	
-		HandleHand(hand);	
+		HandleHand(hand, frame);	
 	}
 }
 
 // HandleHand function, returns fingers and bones within the hand variable
-function HandleHand(hand)
+function HandleHand(hand, frame)
 {	
 	// var for each finger from hand 
 	var fingers = hand.fingers;
@@ -44,7 +49,7 @@ function HandleHand(hand)
 			var strokeWidth = 4;
 
 			// call handlebone function passing three variables
-			HandleBone(boneIndex, bone, strokeWidth);
+			HandleBone(boneIndex, bone, strokeWidth, frame);
 
 		}
 	}		
@@ -91,7 +96,7 @@ function TransformCoordinates (xt, yt)
 }
 
 // HandleBone function, function to display lines indicating each bone
-function HandleBone(boneIndex, bone, strokeWidth)
+function HandleBone(boneIndex, bone, strokeWidth, frame)
 {
 	// variables for base of bone x, y, and z; tip of bone x, y, and z
 	var xb = bone[boneIndex].nextJoint[0];
@@ -113,41 +118,88 @@ function HandleBone(boneIndex, bone, strokeWidth)
 	var g = 0;
 	var b = 0;
 	
-	// if statements to indicate darker bones are bones father from hand
-	if(bone[boneIndex].type == 0)
+	// if one hand is in frame, the hand is green
+	if(frame.hands.length == 1)
 	{
-		strokeWidth = 10;
-		
-		r = 189;
-		g = 218;
-		b = 219;
+		// if statements to indicate darker bones are bones father from hand
+		if(bone[boneIndex].type == 0)
+		{
+			strokeWidth = 10;
+			r = 9;
+			g = 232;
+			b = 69;
+			
+		}
+
+		else if(bone[boneIndex].type == 1)
+		{
+			strokeWidth = 8;
+			r = 6;
+			g = 161;
+			b = 48;
+			
+		}
+
+		else if(bone[boneIndex].type == 2)
+		{
+			strokeWidth = 5;
+			r = 4;
+			g = 110;
+			b = 32;
+			
+		}
+
+		else if(bone[boneIndex].type == 3)
+		{
+			strokeWidth = 5;
+			r = 2;
+			g = 31;
+			b = 10;
+
+		}
 	}
 
-	else if(bone[boneIndex].type == 1)
+	// if two hands are in frame, the hand turns red
+	else if(frame.hands.length == 2)
 	{
-		strokeWidth = 8;
-	
-		r = 134;
-		b = 174;
-		g = 176;
-	}
+		// if statements to indicate darker bones are bones father from hand
+		if(bone[boneIndex].type == 0)
+		{
+			strokeWidth = 10;
+			r = 224;
+			g = 12;
+			b = 4;
+			
+		}
 
-	else if(bone[boneIndex].type == 2)
-	{
-		strokeWidth = 5;
-		r = 118;
-		g = 151;
-		b = 153;
-	}
+		else if(bone[boneIndex].type == 1)
+		{
+			strokeWidth = 8;
+			r = 173;
+			g = 12;
+			b = 7;
+			
+		}
 
-	else if(bone[boneIndex].type == 3)
-	{
-		strokeWidth = 5;
-		r = 79;
-		b = 115;
-		g = 117;
-	}
+		else if(bone[boneIndex].type == 2)
+		{
+			strokeWidth = 5;
+			r = 115;
+			g = 9;
+			b = 6;
 
+			
+		}
+
+		else if(bone[boneIndex].type == 3)
+		{
+			strokeWidth = 5;
+			r = 51;
+			g = 3;
+			b = 2;
+
+		}
+	}
 	// give hand color and width
 	stroke(r,g,b);
 	strokeWeight(strokeWidth);
@@ -160,9 +212,14 @@ function HandleBone(boneIndex, bone, strokeWidth)
 // the infinite loop				
 Leap.loop(controllerOptions, function(frame) 
 {
-	b+=1;
-	clear();		
+	currentNumHands = frame.hands.length;
+	clear();
 	HandleFrame(frame);	
+	previousNumHands = currentNumHands;
+	// b+=1;
+	 	
+	
+	
 }
 		
 );
