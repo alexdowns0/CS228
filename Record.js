@@ -209,17 +209,26 @@ function HandleBone(boneIndex, bone, strokeWidth, frame)
 
 }
 
+// RecordData Function to show when hands switch from 2 to 1 in frame 
+function RecordData()
+{
+	if(currentNumHands == 1 && previousNumHands == 2)
+	{
+		background('#222222');
+	}
+}
+
 // the infinite loop				
 Leap.loop(controllerOptions, function(frame) 
 {
 	currentNumHands = frame.hands.length;
 	clear();
-	HandleFrame(frame);	
+	HandleFrame(frame);
+	RecordData();	
 	previousNumHands = currentNumHands;
 	// b+=1;
 	 	
-	
-	
+		
 }
 		
 );
