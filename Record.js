@@ -13,6 +13,7 @@ var newXMin = 0;
 var newYMax = window.innerHeight;
 var newYMin = 0;
 
+
 // tracking variables
 var previousNumHands = 0;
 var currentNumHands = 0;
@@ -23,16 +24,17 @@ var b = 0;
 // HandleFrame function, returns first hand that is within frame 
 function HandleFrame(frame)
 {
+	var interactionBox = frame.interactionBox;
 	// if statement to determine how many hands are in frame 
 	if(frame.hands.length == 1 || frame.hands.length == 2)
 	{	
 		var hand = frame.hands[0];	
-		HandleHand(hand, frame, InteractionBox);	
+		HandleHand(hand, frame, interactionBox);	
 	}
 }
 
 // HandleHand function, returns fingers and bones within the hand variable
-function HandleHand(hand, frame, InteractionBox)
+function HandleHand(hand, frame, interactionBox)
 {	
 	// var for each finger from hand 
 	var fingers = hand.fingers;
@@ -53,7 +55,7 @@ function HandleHand(hand, frame, InteractionBox)
 			var fingerIndex = fingers[fingerI].type;
 			// call handlebone function passing three variables
 			var boneIndex = bone[boneI].type;
-			HandleBone(boneIndex,boneI, bone, strokeWidth, frame, fingerIndex, InteractionBox);
+			HandleBone(boneIndex,boneI, bone, strokeWidth, frame, fingerIndex, interactionBox);
 
 		}
 	}		
@@ -99,7 +101,7 @@ function TransformCoordinates (xt, yt)
 }
 
 // HandleBone function, function to display lines indicating each bone
-function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, InteractionBox)
+function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, interactionBox)
 {
 	// variables for base of bone x, y, and z; tip of bone x, y, and z
 	var xb = bone[boneI].nextJoint[0];
@@ -115,6 +117,12 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, Int
 	var newT = TransformCoordinates(xt,yt);
 	var newTX = newT[0];
 	var newTY = newT[1];
+
+
+	var normalizedPrevJoint = interactionBox.normalizePoint(bone[boneI].prevJoint, true);
+	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
+
+	console.log(normalizedNextJoint);
 
 	// sum of all x y and z for base and tip elements 0 -> 2
 	var sum = newBX + newBY + zb + newTX + newTY + zt;
