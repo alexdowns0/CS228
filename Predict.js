@@ -3,12 +3,12 @@ const knnClassifier = ml5.KNNClassifier();
 var testingSampleIndex = 1;
 var currentFeatures = nj.array();
 var numSamples = 0;
-numSamples = irisData.shape[0];
+
 var Features = 0;
-numFeatures = irisData.shape[1] - 1;
+
 var currentLabel = 0;
 var trainingCompleted = false;
-var predictedClassLabels = nj.zeros([numSamples]);
+
 
 // iris data sets
 var irisData = nj.array([
@@ -162,6 +162,10 @@ var irisData = nj.array([
 [	6.5	,	3	,	5.2	,	2	,	2	],
 [	6.2	,	3.4	,	5.4	,	2.3	,	2	],
 [	5.9	,	3	,	5.1	,	1.8	,	2	]]);
+
+var predictedClassLabels = nj.zeros([numSamples]);
+numSamples = irisData.shape[0];
+var numFeatures = irisData.shape[1] - 1;
 
 // draw function, draw circles if the machine learning training is finished
 function draw()
