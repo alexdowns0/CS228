@@ -27,12 +27,12 @@ function HandleFrame(frame)
 	if(frame.hands.length == 1 || frame.hands.length == 2)
 	{	
 		var hand = frame.hands[0];	
-		HandleHand(hand, frame);	
+		HandleHand(hand, frame, InteractionBox);	
 	}
 }
 
 // HandleHand function, returns fingers and bones within the hand variable
-function HandleHand(hand, frame)
+function HandleHand(hand, frame, InteractionBox)
 {	
 	// var for each finger from hand 
 	var fingers = hand.fingers;
@@ -53,7 +53,7 @@ function HandleHand(hand, frame)
 			var fingerIndex = fingers[fingerI].type;
 			// call handlebone function passing three variables
 			var boneIndex = bone[boneI].type;
-			HandleBone(boneIndex,boneI, bone, strokeWidth, frame, fingerIndex);
+			HandleBone(boneIndex,boneI, bone, strokeWidth, frame, fingerIndex, InteractionBox);
 
 		}
 	}		
@@ -99,7 +99,7 @@ function TransformCoordinates (xt, yt)
 }
 
 // HandleBone function, function to display lines indicating each bone
-function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex)
+function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, InteractionBox)
 {
 	// variables for base of bone x, y, and z; tip of bone x, y, and z
 	var xb = bone[boneI].nextJoint[0];
