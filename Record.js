@@ -1,4 +1,8 @@
+
+
+
 var controllerOptions = {};
+nj.config.printThreshold = 1000;
 // create numSamples var and currentSample var 
 var numSamples = 2;
 var currentSample = 0;
@@ -238,13 +242,30 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 // RecordData Function to show when hands switch from 2 to 1 in frame 
 function RecordData()
 {
-	if(currentNumHands == 1 && previousNumHands == 2)
+	if(currentNumHands == 2)
 	{
-		background('#222222');
-		// snapshot of when secondary hand leaves frame
-		//console.log(framesOfData.toString());
+	  	currentSample++;
+
+	// 	//background('#222222');
+	// 	// snapshot of when secondary hand leaves frame
+	// 	//console.log(framesOfData.toString());
 	}
-	console.log(framesOfData.toString());
+
+
+
+	// if(currentNumHands == 2)
+	// {
+	// 	currentSample++;
+		
+	// }
+	if (currentSample == numSamples)
+	{
+		currentSample = 0;
+
+	}
+	
+	// grab first tensor
+	 console.log( framesOfData.pick(null,null,null,1).toString() );
 
 }
 
