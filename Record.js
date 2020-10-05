@@ -1,17 +1,15 @@
 var controllerOptions = {};
-
-// create variable for one frame of data
-var oneFrameOfData = nj.zeros([5, 4, 6]);
+// create numSamples var and currentSample var 
+var numSamples = 2;
+var currentSample = 0;
+// create variable for framesof data
+var framesOfData = nj.zeros([5, 4, 6, numSamples]);
 
 // variables for window sizing 
 var newXMax = window.innerWidth;
 var newXMin = 0;
 var newYMax = window.innerHeight;
 var newYMin = 0;
-
-// create numSamples var 
-var numSamples = 2;
-
 
 // tracking variables
 var previousNumHands = 0;
@@ -55,7 +53,6 @@ function HandleHand(hand, frame, interactionBox)
 			// call handlebone function passing three variables
 			var boneIndex = bone[boneI].type;
 			HandleBone(boneIndex,boneI, bone, strokeWidth, frame, fingerIndex, interactionBox);
-
 		}
 	}		
 }
@@ -120,17 +117,10 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	var normalizedPrevJoint = interactionBox.normalizePoint (bone[boneI].prevJoint, true);
 	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
 
-
-
-
 	//console.log(normalizedNextJoint);
 
 	// sum of all x y and z for base and tip elements 0 -> 2
 	
-
-
-
-
 	var canvasXPrev = newXMax * normalizedPrevJoint[0];
 	var canvasXNext = newXMax * (normalizedNextJoint[0]);
 	var canvasYPrev = newYMax * (1 - normalizedPrevJoint[1]);
@@ -139,28 +129,26 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	//var canvasZNext = newXMax * normalizedNextJoint[2];
 
 
-	// 120 element tensor
-	oneFrameOfData.set(fingerIndex, boneIndex, 0, canvasXPrev);
-	oneFrameOfData.set(fingerIndex, boneIndex, 1, canvasYPrev);
-	oneFrameOfData.set(fingerIndex, boneIndex, 2, zt);
-	oneFrameOfData.set(fingerIndex, boneIndex, 3, canvasXNext);
-	oneFrameOfData.set(fingerIndex, boneIndex, 4, canvasYNext);
-	oneFrameOfData.set(fingerIndex, boneIndex, 5, zb);
+	// 120 element tensor, include current sample per step 13
+	framesOfData.set(fingerIndex, boneIndex, 0, currentSample, canvasXPrev);
+	framesOfData.set(fingerIndex, boneIndex, 1, currentSample, canvasYPrev);
+	framesOfData.set(fingerIndex, boneIndex, 2, currentSample, zt);
+	framesOfData.set(fingerIndex, boneIndex, 3, currentSample, canvasXNext);
+	framesOfData.set(fingerIndex, boneIndex, 4, currentSample, canvasYNext);
+	framesOfData.set(fingerIndex, boneIndex, 5, currentSample, zb);
 
 
 	//var sum = xt + yt + zt + xb + yb + zb;
-	//oneFrameOfData.set(3, sum, xt);
-	//oneFrameOfData.set(4, sum, yt);
-	//oneFrameOfData.set(5, sum, zt);
+	//framesOfData.set(3, sum, xt);
+	//framesOfData.set(4, sum, yt);
+	//framesOfData.set(5, sum, zt);
 	
 
 	// var sum = xt + yt + zt + xb + yb + zb;
-	// oneFrameOfData.set(3, sum, xb);
-	// oneFrameOfData.set(4, sum, yb);
-	// oneFrameOfData.set(5, sum, zb);
-	//console.log(oneFrameOfData);
-
-
+	// framesOfData.set(3, sum, xb);
+	// framesOfData.set(4, sum, yb);
+	// framesOfData.set(5, sum, zb);
+	//console.log(framesOfData);
 
 	// variables to store color vals
 	var r = 0;
@@ -241,7 +229,6 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 		}
 	}
 	// give hand color and width
-	
 	stroke(r,g,b);
 	strokeWeight(strokeWidth);
 	// draw those hand lines
@@ -255,9 +242,9 @@ function RecordData()
 	{
 		background('#222222');
 		// snapshot of when secondary hand leaves frame
-		//console.log(oneFrameOfData.toString());
+		//console.log(framesOfData.toString());
 	}
-	console.log(oneFrameOfData.toString());
+	console.log(framesOfData.toString());
 
 }
 
