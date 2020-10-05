@@ -20,10 +20,10 @@ var b = 0;
 // HandleFrame function, returns first hand that is within frame 
 function HandleFrame(frame)
 {
-	var interactionBox = frame.interactionBox;
+	
 	// if statement to determine how many hands are in frame 
 	if(frame.hands.length == 1 || frame.hands.length == 2)
-	{	
+	{	var interactionBox = frame.interactionBox;
 		var hand = frame.hands[0];	
 		HandleHand(hand, frame, interactionBox);	
 	}
@@ -117,27 +117,47 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	var normalizedPrevJoint = interactionBox.normalizePoint (bone[boneI].prevJoint, true);
 	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
 
+
+
+
+	//console.log(normalizedNextJoint);
+
+	// sum of all x y and z for base and tip elements 0 -> 2
+	
+
+
+
+
 	var canvasXPrev = newXMax * normalizedPrevJoint[0];
 	var canvasXNext = newXMax * (normalizedNextJoint[0]);
 	var canvasYPrev = newYMax * (1 - normalizedPrevJoint[1]);
 	var canvasYNext = newYMax * (1 - normalizedNextJoint[1]);
+	//var canvasZPrev = newXMax * normalizedPrevJoint[2];
+	//var canvasZNext = newXMax * normalizedNextJoint[2];
 
-
-	console.log(normalizedNextJoint);
-
-	// sum of all x y and z for base and tip elements 0 -> 2
-	//var sum = newBX + newBY + zb + newTX + newTY + zt;
 
 	// 120 element tensor
-	oneFrameOfData.set(fingerIndex, boneIndex, 0, xt);
-	oneFrameOfData.set(fingerIndex, boneIndex, 1, yt);
+	oneFrameOfData.set(fingerIndex, boneIndex, 0, canvasXPrev);
+	oneFrameOfData.set(fingerIndex, boneIndex, 1, canvasYPrev);
 	oneFrameOfData.set(fingerIndex, boneIndex, 2, zt);
-	oneFrameOfData.set(fingerIndex, boneIndex, 3, xb);
-	oneFrameOfData.set(fingerIndex, boneIndex, 4, yb);
+	oneFrameOfData.set(fingerIndex, boneIndex, 3, canvasXNext);
+	oneFrameOfData.set(fingerIndex, boneIndex, 4, canvasYNext);
 	oneFrameOfData.set(fingerIndex, boneIndex, 5, zb);
-	// oneFrameOfData.set(3, sum, newTX);
-	// oneFrameOfData.set(4, sum, newTY);
-	// oneFrameOfData.set(5, sum, zt);
+
+
+	//var sum = xt + yt + zt + xb + yb + zb;
+	//oneFrameOfData.set(3, sum, xt);
+	//oneFrameOfData.set(4, sum, yt);
+	//oneFrameOfData.set(5, sum, zt);
+	
+
+	// var sum = xt + yt + zt + xb + yb + zb;
+	// oneFrameOfData.set(3, sum, xb);
+	// oneFrameOfData.set(4, sum, yb);
+	// oneFrameOfData.set(5, sum, zb);
+	//console.log(oneFrameOfData);
+
+
 
 	// variables to store color vals
 	var r = 0;
@@ -232,8 +252,9 @@ function RecordData()
 	{
 		background('#222222');
 		// snapshot of when secondary hand leaves frame
-		console.log(oneFrameOfData.toString());
+		//console.log(oneFrameOfData.toString());
 	}
+	console.log(oneFrameOfData.toString());
 
 }
 
@@ -245,8 +266,9 @@ Leap.loop(controllerOptions, function(frame)
 	HandleFrame(frame);
 	RecordData();	
 	previousNumHands = currentNumHands;
+	
 	// this is for my own knowledge
-	b+=1;
+	//b+=1;
 		
 }
 		

@@ -42,6 +42,26 @@ anotherFrameOfData = nj.array([[[273.43799,447.478,74.1418,273.43799,447.478,74.
         [318.26059,372.397,-0.6889,335.43364,365.464,-13.6171],
         [335.43364,365.464,-13.6171,350.75514,363.663,-26.36]]]);
 
+del05array = nj.array([[[ 1798,979.44235,156.375, 1798,979.44235,156.375],
+        [ 1798,979.44235,156.375, 1798,1022.65671,123.298],
+        [ 1798,1022.65671,123.298, 1798,1053.0984,99.5831],
+        [ 1798,1053.0984,99.5831, 1798,1075.51745,81.3126]],
+       [[ 1798,882.58052,148.625, 1798,904.39353,88.8741],
+        [ 1798,904.39353,88.8741, 1798,956.55447,51.9672],
+        [ 1798,956.55447,51.9672, 1798,1021.02473,34.0785],
+        [ 1798,1021.02473,34.0785, 1798, 1076,24.2321]],
+       [[ 1798,859.51427,142.357, 1798,867.71988,81.5469],
+        [ 1798,867.71988,81.5469, 1798,915.27945,37.9939],
+        [ 1798,915.27945,37.9939, 1798,986.13856,16.0454],
+        [ 1798,986.13856,16.0454, 1798,1049.70547,4.78269]],
+       [[ 1798,848.01087,136.971, 1798,843.74342,79.4469],
+        [ 1798,843.74342,79.4469, 1798,888.73244,39.0876],
+        [ 1798,888.73244,39.0876, 1798,960.40114,18.2262],
+        [ 1798,960.40114,18.2262, 1798,1025.713,7.6999]],
+       [[ 1798,865.28655,133.194, 1798,841.75375,78.7546],
+        [ 1798,841.75375,78.7546, 1798,861.46276,45.5197],
+        [ 1798,861.46276,45.5197, 1798,903.00306,29.2638],
+        [ 1798,903.00306,29.2638, 1798,956.56362,17.7381]]])
 var frameIndex = 0;
 var trackerVar = 0;
 function draw()
@@ -69,12 +89,12 @@ function draw()
 	{
 		for (boneIndex = 0; boneIndex < 4; boneIndex++)
 		{
-			var xStart = oneFrameOfData.get(fingerIndex, boneIndex, 0);
-			var yStart = oneFrameOfData.get(fingerIndex, boneIndex, 1);
-			var zStart = oneFrameOfData.get(fingerIndex, boneIndex, 2);
-			var xEnd = oneFrameOfData.get(fingerIndex, boneIndex, 3);
-			var yEnd = oneFrameOfData.get(fingerIndex, boneIndex, 4);
-			var zEnd = oneFrameOfData.get(fingerIndex, boneIndex, 5);
+			var xStart = del05array.get(fingerIndex, boneIndex, 0);
+			var yStart = del05array.get(fingerIndex, boneIndex, 1);
+			var zStart = del05array.get(fingerIndex, boneIndex, 2);
+			var xEnd = del05array.get(fingerIndex, boneIndex, 3);
+			var yEnd = del05array.get(fingerIndex, boneIndex, 4);
+			var zEnd = del05array.get(fingerIndex, boneIndex, 5);
 			var xStart2 = anotherFrameOfData.get(fingerIndex, boneIndex, 0);
 			var yStart2 = anotherFrameOfData.get(fingerIndex, boneIndex, 1);
 			var zStart2 = anotherFrameOfData.get(fingerIndex, boneIndex, 2);
