@@ -9,6 +9,9 @@ var newXMin = 0;
 var newYMax = window.innerHeight;
 var newYMin = 0;
 
+// create numSamples var 
+var numSamples = 2;
+
 
 // tracking variables
 var previousNumHands = 0;
