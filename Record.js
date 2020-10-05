@@ -121,6 +121,14 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	var normalizedPrevJoint = interactionBox.normalizePoint (bone[boneI].prevJoint, true);
 	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
 
+	framesOfData.set(fingerIndex, boneIndex, 0, currentSample, normalizedPrevJoint[0]);
+	framesOfData.set(fingerIndex, boneIndex, 1, currentSample, normalizedPrevJoint[1]);
+	framesOfData.set(fingerIndex, boneIndex, 2, currentSample, zt);
+	framesOfData.set(fingerIndex, boneIndex, 3, currentSample, normalizedNextJoint[0]);
+	framesOfData.set(fingerIndex, boneIndex, 4, currentSample, normalizedNextJoint[1]);
+	framesOfData.set(fingerIndex, boneIndex, 5, currentSample, zb);
+
+
 	//console.log(normalizedNextJoint);
 
 	// sum of all x y and z for base and tip elements 0 -> 2
@@ -133,13 +141,7 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	//var canvasZNext = newXMax * normalizedNextJoint[2];
 
 
-	// 120 element tensor, include current sample per step 13
-	framesOfData.set(fingerIndex, boneIndex, 0, currentSample, canvasXPrev);
-	framesOfData.set(fingerIndex, boneIndex, 1, currentSample, canvasYPrev);
-	framesOfData.set(fingerIndex, boneIndex, 2, currentSample, zt);
-	framesOfData.set(fingerIndex, boneIndex, 3, currentSample, canvasXNext);
-	framesOfData.set(fingerIndex, boneIndex, 4, currentSample, canvasYNext);
-	framesOfData.set(fingerIndex, boneIndex, 5, currentSample, zb);
+
 
 
 	//var sum = xt + yt + zt + xb + yb + zb;
@@ -249,23 +251,23 @@ function RecordData()
 	// 	//background('#222222');
 	// 	// snapshot of when secondary hand leaves frame
 	// 	//console.log(framesOfData.toString());
+		if (currentSample == numSamples)
+		{
+			currentSample = 0;
+
+		}
 	}
 
-
-
-	// if(currentNumHands == 2)
-	// {
-	// 	currentSample++;
-		
-	// }
-	if (currentSample == numSamples)
+	if (currentNumHands == 1 && previousNumHands == 2)
 	{
-		currentSample = 0;
-
+		console.log(framesOfData.toString());
 	}
+
+
 	
 	// grab first tensor
-	 console.log( framesOfData.pick(null,null,null,1).toString() );
+	
+	 //console.log(currentSample);
 
 }
 
