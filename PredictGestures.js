@@ -3,7 +3,7 @@ const knnClassifier = ml5.KNNClassifier();
 var testingSampleIndex = 1;
 var currentFeatures = nj.array();
 var numSamples = 0;
-
+nj.config.printThreshold = 1000;
 var Features = 0;
 
 var currentLabel = 0;
@@ -36,7 +36,8 @@ function Train()
 {
 	for (var tensorIterator = 0; tensorIterator < train0.shape[3]; tensorIterator++)
 	{
-		var features = train0.pick(null, null, null, tensorIterator);
+		var features = train0.pick(null, null, null, tensorIterator).reshape(1, 120);
+		knnClassifier.addExample(features.tolist(), 0);
 		console.log(features.toString());
 
 	}
