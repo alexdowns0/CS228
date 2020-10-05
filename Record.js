@@ -123,10 +123,10 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 
 	framesOfData.set(fingerIndex, boneIndex, 0, currentSample, normalizedPrevJoint[0]);
 	framesOfData.set(fingerIndex, boneIndex, 1, currentSample, normalizedPrevJoint[1]);
-	framesOfData.set(fingerIndex, boneIndex, 2, currentSample, zt);
+	framesOfData.set(fingerIndex, boneIndex, 2, currentSample, zb);
 	framesOfData.set(fingerIndex, boneIndex, 3, currentSample, normalizedNextJoint[0]);
 	framesOfData.set(fingerIndex, boneIndex, 4, currentSample, normalizedNextJoint[1]);
-	framesOfData.set(fingerIndex, boneIndex, 5, currentSample, zb);
+	framesOfData.set(fingerIndex, boneIndex, 5, currentSample, zt);
 
 
 	//console.log(normalizedNextJoint);
@@ -244,24 +244,29 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 // RecordData Function to show when hands switch from 2 to 1 in frame 
 function RecordData()
 {
-	if(currentNumHands == 2)
-	{
-	  	currentSample++;
-
+	
 	// 	//background('#222222');
 	// 	// snapshot of when secondary hand leaves frame
 	// 	//console.log(framesOfData.toString());
+	if (currentNumHands == 2)
+	{
+		currentSample++;
 		if (currentSample == numSamples)
 		{
 			currentSample = 0;
-
+			
 		}
+		
 	}
 
-	if (currentNumHands == 1 && previousNumHands == 2)
+	if(currentNumHands == 1 && previousNumHands == 2)
 	{
-		console.log(framesOfData.toString());
+	  	
+	  	console.log(framesOfData.toString());
 	}
+
+
+
 
 
 	
