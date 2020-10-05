@@ -4,10 +4,6 @@ var controllerOptions = {};
 var oneFrameOfData = nj.zeros([5, 4, 6]);
 
 // variables for window sizing 
-var rawXMin = 10000;
-var rawXMax = -10000;
-var rawYMin = 10000;
-var rawYMax = -10000;
 var newXMax = window.innerWidth;
 var newXMin = 0;
 var newYMax = window.innerHeight;
@@ -68,37 +64,37 @@ function HandleHand(hand, frame, interactionBox)
 //  }
 
 // TransformCoordinates function, manipulates hand on screen to make sure it isn't inverted and fits well 
-function TransformCoordinates (xt, yt)
-{
-	if(xt < rawXMin)
-	{
-		rawXMin = xt; 	    		
-	}
+// function TransformCoordinates (xt, yt)
+// {
+// 	if(xt < rawXMin)
+// 	{
+// 		rawXMin = xt; 	    		
+// 	}
 
-	if(xt > rawXMax)
-	{
-		rawXMax = xt; 
-	}
+// 	if(xt > rawXMax)
+// 	{
+// 		rawXMax = xt; 
+// 	}
 
-	if(yt < rawYMin)
-	{
-		rawYMin = yt;
-	}
+// 	if(yt < rawYMin)
+// 	{
+// 		rawYMin = yt;
+// 	}
 
-	if(yt > rawYMax)
-	{
-		rawYMax = yt;
-	}
+// 	if(yt > rawYMax)
+// 	{
+// 		rawYMax = yt;
+// 	}
 	
 	
-	var newX = (((xt - rawXMin) * (newXMax - newXMin)) / (rawXMax - rawXMin)) + newXMin;	    	
-	var newY = (((yt - rawYMin) * (newYMax - newYMin)) / (rawYMax - rawYMin)) + newYMin;
+// 	var newX = (((xt - rawXMin) * (newXMax - newXMin)) / (rawXMax - rawXMin)) + newXMin;	    	
+// 	var newY = (((yt - rawYMin) * (newYMax - newYMin)) / (rawYMax - rawYMin)) + newYMin;
 
-	newY = window.innerHeight - yt;	  	
+// 	newY = window.innerHeight - yt;	  	
 
-	return[newX,newY];
+// 	return[newX,newY];
 
-}
+// }
 
 // HandleBone function, function to display lines indicating each bone
 function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, interactionBox)
@@ -111,28 +107,33 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	var yt = bone[boneI].prevJoint[1];
 	var zt = bone[boneI].prevJoint[2];
 
-	var newB = TransformCoordinates(xb,yb);
-	var newBX = newB[0];
-	var newBY = newB[1];
-	var newT = TransformCoordinates(xt,yt);
-	var newTX = newT[0];
-	var newTY = newT[1];
+	//var newB = TransformCoordinates(xb,yb);
+	//var newBX = newB[0];
+	//var newBY = newB[1];
+	//var newT = TransformCoordinates(xt,yt);
+	//var newTX = newT[0];
+	//var newTY = newT[1];
 
-
-	var normalizedPrevJoint = interactionBox.normalizePoint(bone[boneI].prevJoint, true);
+	var normalizedPrevJoint = interactionBox.normalizePoint (bone[boneI].prevJoint, true);
 	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
+
+	var canvasXPrev = newXMax * normalizedPrevJoint[0];
+	var canvasXNext = newXMax * (normalizedNextJoint[0]);
+	var canvasYPrev = newYMax * (1 - normalizedPrevJoint[1]);
+	var canvasYNext = newYMax * (1 - normalizedNextJoint[1]);
+
 
 	console.log(normalizedNextJoint);
 
 	// sum of all x y and z for base and tip elements 0 -> 2
-	var sum = newBX + newBY + zb + newTX + newTY + zt;
+	//var sum = newBX + newBY + zb + newTX + newTY + zt;
 
 	// 120 element tensor
-	oneFrameOfData.set(fingerIndex, boneIndex, 0, newTX);
-	oneFrameOfData.set(fingerIndex, boneIndex, 1, newTY);
+	oneFrameOfData.set(fingerIndex, boneIndex, 0, xt);
+	oneFrameOfData.set(fingerIndex, boneIndex, 1, yt);
 	oneFrameOfData.set(fingerIndex, boneIndex, 2, zt);
-	oneFrameOfData.set(fingerIndex, boneIndex, 3, newBX);
-	oneFrameOfData.set(fingerIndex, boneIndex, 4, newBY);
+	oneFrameOfData.set(fingerIndex, boneIndex, 3, xb);
+	oneFrameOfData.set(fingerIndex, boneIndex, 4, yb);
 	oneFrameOfData.set(fingerIndex, boneIndex, 5, zb);
 	// oneFrameOfData.set(3, sum, newTX);
 	// oneFrameOfData.set(4, sum, newTY);
@@ -217,10 +218,11 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 		}
 	}
 	// give hand color and width
+	
 	stroke(r,g,b);
 	strokeWeight(strokeWidth);
 	// draw those hand lines
-	line(newBX,newBY,newTX, newTY);
+	line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
 }
 
 // RecordData Function to show when hands switch from 2 to 1 in frame 
