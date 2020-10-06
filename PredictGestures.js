@@ -38,7 +38,7 @@ function Train()
 	{
 		var features = train0.pick(null, null, null, tensorIterator).reshape(1, 120);
 		knnClassifier.addExample(features.tolist(), 0);
-		console.log(features.toString());
+		//console.log(features.toString());
 
 	}
 
@@ -50,7 +50,12 @@ function Train()
 // test function, test knn classifier
 function Test()
 {
-		
+	for (var tensorIterator = 0; tensorIterator < test.shape[3]; tensorIterator++)
+	{
+		var features2 = test.pick(null, null, null, tensorIterator).reshape(1, 120);
+		knnClassifier.addExample(features2.tolist(), 0);
+		console.log(features2.toString)
+	}
 	//console.log("4");
 	
 }
