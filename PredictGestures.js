@@ -42,6 +42,15 @@ function Train()
 
 	}
 
+	for (var tensorIterator2 = 0; tensorIterator2 < train1.shape[3]; tensorIterator2++)
+	{
+		var features2 = train1.pick(null, null, null, tensorIterator2);
+		features2 = features2.reshape(120);
+		knnClassifier.addExample(features2.tolist(), 0);
+		//console.log(features.toString());
+
+	}
+
 	//console.log("done");
 	trainingCompleted = true;
 	//console.log(train0.toString());
