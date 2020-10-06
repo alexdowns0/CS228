@@ -33,18 +33,18 @@ function draw()
 // train function, go through all iris data and add to knnClassifier
 function Train()
 {
-	for (var tensorIterator = 0; tensorIterator < train0.shape[3]; tensorIterator++)
+	for (var tensorIterator = 0; tensorIterator < train3.shape[3]; tensorIterator++)
 	{
-		var features = train0.pick(null, null, null, tensorIterator);
+		var features = train3.pick(null, null, null, tensorIterator);
 		features = features.reshape(120);
 		knnClassifier.addExample(features.tolist(), 0);
 		//console.log(features.toString());
 
 	}
 
-	for (var tensorIterator2 = 0; tensorIterator2 < train1.shape[3]; tensorIterator2++)
+	for (var tensorIterator2 = 0; tensorIterator2 < train2.shape[3]; tensorIterator2++)
 	{
-		var features2 = train1.pick(null, null, null, tensorIterator2);
+		var features2 = train2.pick(null, null, null, tensorIterator2);
 		features2 = features2.reshape(120);
 		knnClassifier.addExample(features2.tolist(), 0);
 		//console.log(features.toString());

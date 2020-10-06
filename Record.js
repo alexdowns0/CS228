@@ -4,10 +4,12 @@
 var controllerOptions = {};
 nj.config.printThreshold = 1000;
 // create numSamples var and currentSample var 
-var numSamples = 2;
+var numSamples = 100;
 var currentSample = 0;
 // create variable for framesof data
 var framesOfData = nj.zeros([5, 4, 6, numSamples]);
+
+
 
 // variables for window sizing 
 var newXMax = window.innerWidth;
@@ -263,6 +265,7 @@ function RecordData()
 	{
 	  	
 	  	console.log(framesOfData.toString());
+	  		
 	}
 
 
