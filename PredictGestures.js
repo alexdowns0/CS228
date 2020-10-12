@@ -1,11 +1,11 @@
 // init variables, constants, and irisData array
 
-nj.config.printThreshold = 1000;
+
 // create numSamples var and currentSample var 
-var numSamples = 100;
-var currentSample = 0;
+
 // create variable for framesof data
-var framesOfData = nj.zeros([5, 4, 6]);
+var oneFrameOfData = nj.zeros([5, 4, 6]);
+
 
 
 
@@ -23,7 +23,7 @@ const knnClassifier = ml5.KNNClassifier();
 var testingSampleIndex = 0;
 var currentFeatures;
 var numSamples = 0;
-nj.config.printThreshold = 1000;
+nj.config.printThreshold = 6;
 var predictedLabel;
 var currentLabel;
 var trainingCompleted = false;
@@ -34,12 +34,10 @@ Leap.loop(controllerOptions, function(frame)
 {
 	clear();	
 	if (trainingCompleted == false)
-	{
+	{	
 		Train();
 	}
 	HandleFrame(frame);
-	console.log(framesOfData.toString());
-	Test();	
 });
 
 // HandleFrame function, returns first hand that is within frame 
@@ -51,6 +49,10 @@ function HandleFrame(frame)
 	{	var interactionBox = frame.interactionBox;
 		var hand = frame.hands[0];	
 		HandleHand(hand, frame, interactionBox);	
+
+		//console.log(oneFrameOfData.toString());
+		//console.log(testingSampleIndex + " " + result.label);
+		Test();	
 	}
 }
 
@@ -95,12 +97,12 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	var normalizedPrevJoint = interactionBox.normalizePoint (bone[boneI].prevJoint, true);
 	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
 
-	framesOfData.set(fingerIndex, boneIndex, 0, normalizedPrevJoint[0]);
-	framesOfData.set(fingerIndex, boneIndex, 1, normalizedPrevJoint[1]);
-	framesOfData.set(fingerIndex, boneIndex, 2, zb);
-	framesOfData.set(fingerIndex, boneIndex, 3, normalizedNextJoint[0]);
-	framesOfData.set(fingerIndex, boneIndex, 4, normalizedNextJoint[1]);
-	framesOfData.set(fingerIndex, boneIndex, 5, zt);
+	oneFrameOfData.set(fingerIndex, boneIndex, 0, normalizedPrevJoint[0]);
+	oneFrameOfData.set(fingerIndex, boneIndex, 1, normalizedPrevJoint[1]);
+	oneFrameOfData.set(fingerIndex, boneIndex, 2, zb);
+	oneFrameOfData.set(fingerIndex, boneIndex, 3, normalizedNextJoint[0]);
+	oneFrameOfData.set(fingerIndex, boneIndex, 4, normalizedNextJoint[1]);
+	oneFrameOfData.set(fingerIndex, boneIndex, 5, zt);
 
 	var canvasXPrev = newXMax * normalizedPrevJoint[0];
 	var canvasXNext = newXMax * (normalizedNextJoint[0]);
@@ -203,13 +205,15 @@ function Train()
 		features = train2.pick(null, null, null, tensorIterator);
 		features = features.reshape(120);
 		knnClassifier.addExample(features.tolist(), 2);
+		console.log(tensorIterator + " " + features.toString());
+		
 	}
 }
 
 // test function, test knn classifier
 function Test()
 {
-	currentFeatures = test.pick(null, null, null, testingSampleIndex);
+	currentFeatures = oneFrameOfData.pick(null, null, null, testingSampleIndex).reshape(1, 120);
 	
 	predictedLabel = knnClassifier.classify(currentFeatures.tolist(),GotResults);
 }
@@ -218,7 +222,7 @@ function GotResults(err, result)
 {
 	predictedClassLabels.set(testingSampleIndex,parseInt(result.label));
 	
-	//console.log(testingSampleIndex + " " + result.label);
+	console.log(testingSampleIndex + " " + result.label);
 	
 	testingSampleIndex++;
 
