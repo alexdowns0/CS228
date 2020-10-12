@@ -1,4 +1,24 @@
 // init variables, constants, and irisData array
+
+nj.config.printThreshold = 1000;
+// create numSamples var and currentSample var 
+var numSamples = 100;
+var currentSample = 0;
+// create variable for framesof data
+var framesOfData = nj.zeros([5, 4, 6, numSamples]);
+
+
+
+// variables for window sizing 
+var newXMax = window.innerWidth;
+var newXMin = 0;
+var newYMax = window.innerHeight;
+var newYMin = 0;
+
+// tracking variables
+var previousNumHands = 0;
+var currentNumHands = 0;
+var controllerOptions = {};
 const knnClassifier = ml5.KNNClassifier();
 var testingSampleIndex = 0;
 var currentFeatures;
@@ -7,27 +27,167 @@ nj.config.printThreshold = 1000;
 var predictedLabel;
 var currentLabel;
 var trainingCompleted = false;
-
-
-
-
 var predictedClassLabels = nj.zeros([1,test.shape[3]]);
 
 
-// draw function, draw circles if the machine learning training is finished
-function draw()
+Leap.loop(controllerOptions, function(frame)
 {
-	//console.log(irisData.toString());
-	//console.log(numSamples,numFeatures);
 	clear();	
 	if (trainingCompleted == false)
 	{
 		Train();
-
 	}
-	
-	
+	HandleFrame(frame);
 	Test();	
+});
+
+// HandleFrame function, returns first hand that is within frame 
+function HandleFrame(frame)
+{
+	
+	// if statement to determine how many hands are in frame 
+	if(frame.hands.length == 1 || frame.hands.length == 2)
+	{	var interactionBox = frame.interactionBox;
+		var hand = frame.hands[0];	
+		HandleHand(hand, frame, interactionBox);	
+	}
+}
+
+// HandleHand function, returns fingers and bones within the hand variable
+function HandleHand(hand, frame, interactionBox)
+{	
+	// var for each finger from hand 
+	var fingers = hand.fingers;
+
+	// for loop that iterates through each bone (4 total)
+	for (var boneI = 3; boneI >= 0; boneI--)
+	{
+		// for loop that iterates through each finger (5 total)
+		for(var fingerI = 0; fingerI < 5; fingerI++)
+		{
+			// only one bone that is being stored in bone variable
+			var bone = fingers[fingerI].bones;
+
+			//console.log(bone, bone.type);
+
+			// variable for strokeWeight
+			var strokeWidth = 4;
+			var fingerIndex = fingers[fingerI].type;
+			// call handlebone function passing three variables
+			var boneIndex = bone[boneI].type;
+			HandleBone(boneIndex,boneI, bone, strokeWidth, frame, fingerIndex, interactionBox);
+		}
+	}		
+}
+
+// HandleBone function, function to display lines indicating each bone
+function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, interactionBox)
+{
+	// variables for base of bone x, y, and z; tip of bone x, y, and z
+	var xb = bone[boneI].nextJoint[0];
+	var yb = bone[boneI].nextJoint[1];
+	var zb = bone[boneI].nextJoint[2];
+	var xt = bone[boneI].prevJoint[0];
+	var yt = bone[boneI].prevJoint[1];
+	var zt = bone[boneI].prevJoint[2];
+
+	var normalizedPrevJoint = interactionBox.normalizePoint (bone[boneI].prevJoint, true);
+	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
+
+	// framesOfData.set(fingerIndex, boneIndex, 0, currentSample, normalizedPrevJoint[0]);
+	// framesOfData.set(fingerIndex, boneIndex, 1, currentSample, normalizedPrevJoint[1]);
+	// framesOfData.set(fingerIndex, boneIndex, 2, currentSample, zb);
+	// framesOfData.set(fingerIndex, boneIndex, 3, currentSample, normalizedNextJoint[0]);
+	// framesOfData.set(fingerIndex, boneIndex, 4, currentSample, normalizedNextJoint[1]);
+	// framesOfData.set(fingerIndex, boneIndex, 5, currentSample, zt);
+
+	var canvasXPrev = newXMax * normalizedPrevJoint[0];
+	var canvasXNext = newXMax * (normalizedNextJoint[0]);
+	var canvasYPrev = newYMax * (1 - normalizedPrevJoint[1]);
+	var canvasYNext = newYMax * (1 - normalizedNextJoint[1]);
+	// variables to store color vals
+	var r = 0;
+	var g = 0;
+	var b = 0;
+	
+	// if one hand is in frame, the hand is green
+	if(frame.hands.length == 1)
+	{
+		// if statements to indicate darker bones are bones father from hand
+		if(boneIndex == 0)
+		{
+			strokeWidth = 10;
+			r = 128;
+			g = 128;
+			b = 128;	
+		}
+
+		else if(boneIndex == 1)
+		{
+			strokeWidth = 8;
+			r = 96;
+			g = 96;
+			b = 96;		
+		}
+
+		else if(boneIndex == 2)
+		{
+			strokeWidth = 5;
+			r = 64;
+			g = 64;
+			b = 64;		
+		}
+
+		else if(boneIndex == 3)
+		{
+			strokeWidth = 5;
+			r = 32;
+			g = 32;
+			b = 32;
+		}
+	}
+
+	// if two hands are in frame, the hand turns red
+	else if(frame.hands.length == 2)
+	{
+		// if statements to indicate darker bones are bones father from hand
+		if(boneIndex == 0)
+		{
+			strokeWidth = 10;
+			r = 128;
+			g = 128;
+			b = 128;		
+		}
+
+		else if(boneIndex == 1)
+		{
+			strokeWidth = 8;
+			r = 96;
+			g = 96;
+			b = 96;		
+		}
+
+		else if(boneIndex == 2)
+		{
+			strokeWidth = 5;
+			r = 64;
+			g = 64;
+			b = 64;		
+		}
+
+		else if(boneIndex == 3)
+		{
+			strokeWidth = 5;
+			r = 32;
+			g = 32;
+			b = 32;
+		}
+	}
+	// give hand color and width
+	stroke(r,g,b);
+	strokeWeight(strokeWidth);
+	// draw those hand lines
+	line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
 }
 
 // train function, go through all iris data and add to knnClassifier
@@ -42,12 +202,7 @@ function Train()
 		features = train2.pick(null, null, null, tensorIterator);
 		features = features.reshape(120);
 		knnClassifier.addExample(features.tolist(), 2);
-		//console.log(features.toString());
 	}
-
-	//console.log("done");
-	
-	//console.log(train0.toString());
 }
 
 // test function, test knn classifier
@@ -56,10 +211,6 @@ function Test()
 	currentFeatures = test.pick(null, null, null, testingSampleIndex);
 	
 	predictedLabel = knnClassifier.classify(currentFeatures.tolist(),GotResults);
-	//console.log("4");
-
-	//console.log(currentFeatures);
-	
 }
 
 function GotResults(err, result)
@@ -74,12 +225,6 @@ function GotResults(err, result)
 	{
 	  testingSampleIndex = 0;
 	}
-
-//console.log(testingSampleIndex, test.shape[3]);
-	//console.log(currentTestingSample.toString());
-	
-	//console.log(testingSampleIndex);
-	
 
 }
 
