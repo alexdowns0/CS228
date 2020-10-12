@@ -20,7 +20,7 @@ var previousNumHands = 0;
 var currentNumHands = 0;
 var controllerOptions = {};
 const knnClassifier = ml5.KNNClassifier();
-var testingSampleIndex = 0;
+
 var currentFeatures;
 var numSamples = 0;
 nj.config.printThreshold = 6;
@@ -51,7 +51,7 @@ function HandleFrame(frame)
 		HandleHand(hand, frame, interactionBox);	
 
 		//console.log(oneFrameOfData.toString());
-		//console.log(testingSampleIndex + " " + result.label);
+
 		Test();	
 	}
 }
@@ -213,23 +213,23 @@ function Train()
 // test function, test knn classifier
 function Test()
 {
-	currentFeatures = oneFrameOfData.pick(null, null, null, testingSampleIndex).reshape(1, 120);
+	currentFeatures = oneFrameOfData.pick(null, null, null, 0);
 	
-	predictedLabel = knnClassifier.classify(currentFeatures.tolist(),GotResults);
+	//predictedLabel = knnClassifier.classify(currentFeatures.tolist(),GotResults);
 }
 
 function GotResults(err, result)
 {
-	predictedClassLabels.set(testingSampleIndex,parseInt(result.label));
+	//predictedClassLabels.set(testingSampleIndex,parseInt(result.label));
 	
-	console.log(testingSampleIndex + " " + result.label);
+	console.log(result.label);
 	
-	testingSampleIndex++;
+	//testingSampleIndex++;
 
-	if (testingSampleIndex >= test.shape[3])
-	{
-	  testingSampleIndex = 0;
-	}
+	//if (testingSampleIndex >= test.shape[3])
+	//{
+	//  testingSampleIndex = 0;
+	//}
 
 }
 
