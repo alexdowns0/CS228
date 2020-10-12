@@ -7,6 +7,10 @@
 var oneFrameOfData = nj.zeros([5, 4, 6]);
 
 
+var numPredictions = 0;
+var meanPredictions = 0;
+var currentPredictions = 0;
+var hardCodedDigit = 2;
 
 
 // variables for window sizing 
@@ -27,7 +31,7 @@ nj.config.printThreshold = 6;
 var predictedLabel;
 var currentLabel;
 var trainingCompleted = false;
-var predictedClassLabels = nj.zeros([1,test.shape[3]]);
+//var predictedClassLabels = nj.zeros([1,test.shape[3]]);
 
 
 Leap.loop(controllerOptions, function(frame)
@@ -39,6 +43,29 @@ Leap.loop(controllerOptions, function(frame)
 	}
 	HandleFrame(frame);
 });
+
+function GotResults(err, result)
+{
+	//predictedClassLabels.set(parseInt(result.label));
+
+
+	
+	var currentPredictions = result.label;
+	//console.log(result.label);
+	
+	//console.log("b");
+	numPredictions += 1;
+	meanPredictions = (((numPredictions-1) * meanPredictions) + (currentPredictions == 3)) / numPredictions;
+	//console.log(numPredictions + ", " + meanPredictions + ", " + currentPredictions);
+	//testingSampleIndex++;
+
+	//if (testingSampleIndex >= test.shape[3])
+	//{
+	//  testingSampleIndex = 0;
+	//}
+
+}
+
 
 // HandleFrame function, returns first hand that is within frame 
 function HandleFrame(frame)
@@ -205,7 +232,7 @@ function Train()
 		features = train2.pick(null, null, null, tensorIterator);
 		features = features.reshape(120);
 		knnClassifier.addExample(features.tolist(), 2);
-		console.log(tensorIterator + " " + features.toString());
+		//console.log(tensorIterator + " " + features.toString());
 		
 	}
 }
@@ -215,22 +242,7 @@ function Test()
 {
 	currentFeatures = oneFrameOfData.pick(null, null, null, 0);
 	
-	//predictedLabel = knnClassifier.classify(currentFeatures.tolist(),GotResults);
-}
-
-function GotResults(err, result)
-{
-	//predictedClassLabels.set(testingSampleIndex,parseInt(result.label));
-	
-	console.log(result.label);
-	
-	//testingSampleIndex++;
-
-	//if (testingSampleIndex >= test.shape[3])
-	//{
-	//  testingSampleIndex = 0;
-	//}
-
+	predictedLabel = knnClassifier.classify(currentFeatures.tolist(), GotResults);
 }
 
 
