@@ -5,7 +5,7 @@ nj.config.printThreshold = 1000;
 var numSamples = 100;
 var currentSample = 0;
 // create variable for framesof data
-var framesOfData = nj.zeros([5, 4, 6, numSamples]);
+var framesOfData = nj.zeros([5, 4, 6]);
 
 
 
@@ -38,6 +38,7 @@ Leap.loop(controllerOptions, function(frame)
 		Train();
 	}
 	HandleFrame(frame);
+	console.log(framesOfData.toString());
 	Test();	
 });
 
@@ -94,12 +95,12 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 	var normalizedPrevJoint = interactionBox.normalizePoint (bone[boneI].prevJoint, true);
 	var normalizedNextJoint = interactionBox.normalizePoint(bone[boneI].nextJoint, true);
 
-	// framesOfData.set(fingerIndex, boneIndex, 0, currentSample, normalizedPrevJoint[0]);
-	// framesOfData.set(fingerIndex, boneIndex, 1, currentSample, normalizedPrevJoint[1]);
-	// framesOfData.set(fingerIndex, boneIndex, 2, currentSample, zb);
-	// framesOfData.set(fingerIndex, boneIndex, 3, currentSample, normalizedNextJoint[0]);
-	// framesOfData.set(fingerIndex, boneIndex, 4, currentSample, normalizedNextJoint[1]);
-	// framesOfData.set(fingerIndex, boneIndex, 5, currentSample, zt);
+	framesOfData.set(fingerIndex, boneIndex, 0, normalizedPrevJoint[0]);
+	framesOfData.set(fingerIndex, boneIndex, 1, normalizedPrevJoint[1]);
+	framesOfData.set(fingerIndex, boneIndex, 2, zb);
+	framesOfData.set(fingerIndex, boneIndex, 3, normalizedNextJoint[0]);
+	framesOfData.set(fingerIndex, boneIndex, 4, normalizedNextJoint[1]);
+	framesOfData.set(fingerIndex, boneIndex, 5, zt);
 
 	var canvasXPrev = newXMax * normalizedPrevJoint[0];
 	var canvasXNext = newXMax * (normalizedNextJoint[0]);
@@ -217,7 +218,7 @@ function GotResults(err, result)
 {
 	predictedClassLabels.set(testingSampleIndex,parseInt(result.label));
 	
-	console.log(testingSampleIndex + " " + result.label);
+	//console.log(testingSampleIndex + " " + result.label);
 	
 	testingSampleIndex++;
 
