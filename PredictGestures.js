@@ -245,6 +245,10 @@ function Test()
 	predictedLabel = knnClassifier.classify(currentFeatures.tolist(), GotResults);
 }
 
+function CenterData()
+{
+
+}
 
 
 
