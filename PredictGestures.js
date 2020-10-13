@@ -240,18 +240,58 @@ function Train()
 // test function, test knn classifier
 function Test()
 {
-	CenterData();
+	CenterXData();
+	CenterYData();
 
 	currentFeatures = oneFrameOfData.pick(null, null, null, 0);
 	
 	predictedLabel = knnClassifier.classify(currentFeatures.tolist(), GotResults);
 }
 
-function CenterData()
+function CenterXData()
 {
 	var xValues = oneFrameOfData.slice([],[],[0,6,3]);
 	var currentMean = xValues.mean();
+	var horizontalShift = (0.5 - currentMean);
+
+	for (var row = 0; row < xValues.shape[0]; row++)
+	{
+		for (var column = 0; column < xValues.shape[1]; column++)
+		{
+			currentX = oneFrameOfData.get(row,column,0);
+			shiftedX = currentX + horizontalShift;
+			oneFrameOfData.set(row,column,0, shiftedX);
+			currentX = oneFrameOfData.get(row,column,3);
+			shiftedX = currentX + horizontalShift;
+			oneFrameOfData.set(row,column,3, shiftedX);
+		}
+	}
+	xValues = oneFrameOfData.slice([],[],[0,6,3]);
+	var currentMean = xValues.mean();
 	//console.log(xValues.shape);
+	console.log(currentMean);
+	//console.log(horizontalShift);
+}
+
+function CenterYData()
+{
+	var yValues = oneFrameOfData.slice([],[],[1,6,3]);
+	var currentMean = yValues.mean();
+	var verticalShift = (0.5 - currentMean);
+
+	for (var row = 0; row < yValues.shape[0]; row++)
+	{
+		for (var column = 0; column < yValues.shape[1]; column++)
+		{
+			currentY = oneFrameOfData.get(row,column,1);
+			shiftedY = currentY + verticalShift;
+			oneFrameOfData.set(row,column,1, shiftedY);
+			currentY = oneFrameOfData.get(row,column,4);
+			shiftedY = currentY + verticalShift;
+			oneFrameOfData.set(row,column,4, shiftedY);
+		}
+	}
+	var currentMean = yValues.mean();
 	console.log(currentMean);
 }
 
