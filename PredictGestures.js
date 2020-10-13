@@ -242,6 +242,7 @@ function Test()
 {
 	CenterXData();
 	CenterYData();
+	CenterZData();
 
 	currentFeatures = oneFrameOfData.pick(null, null, null, 0);
 	
@@ -266,10 +267,9 @@ function CenterXData()
 			oneFrameOfData.set(row,column,3, shiftedX);
 		}
 	}
-	xValues = oneFrameOfData.slice([],[],[0,6,3]);
 	var currentMean = xValues.mean();
 	//console.log(xValues.shape);
-	console.log(currentMean);
+	//console.log(currentMean);
 	//console.log(horizontalShift);
 }
 
@@ -292,8 +292,31 @@ function CenterYData()
 		}
 	}
 	var currentMean = yValues.mean();
+	//console.log(currentMean);
+}
+
+function CenterZData()
+{
+	var zValues = oneFrameOfData.slice([],[],[2,6,3]);
+	var currentMean = zValues.mean();
+	var verticalShift = (0.5 - currentMean);
+
+	for (var row = 0; row < zValues.shape[0]; row++)
+	{
+		for (var column = 0; column < zValues.shape[1]; column++)
+		{
+			currentZ = oneFrameOfData.get(row,column,2);
+			shiftedZ = currentZ + verticalShift;
+			oneFrameOfData.set(row,column,2, shiftedZ);
+			currentZ = oneFrameOfData.get(row,column,5);
+			shiftedZ = currentZ + verticalShift;
+			oneFrameOfData.set(row,column,5, shiftedZ);
+		}
+	}
+	var currentMean = zValues.mean();
 	console.log(currentMean);
 }
+
 
 
 
