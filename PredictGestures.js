@@ -10,7 +10,7 @@ var oneFrameOfData = nj.zeros([5, 4, 6]);
 var numPredictions = 0;
 var meanPredictions = 0;
 var currentPredictions = 0;
-var hardCodedDigit = 2;
+var hardCodedDigit = 6;
 
 
 // variables for window sizing 
@@ -50,12 +50,12 @@ function GotResults(err, result)
 
 
 	
-	var currentPredictions = result.label;
+	var currentPredictions = (parseInt(result.label));
 	console.log(result.label);
 	
 	//console.log("b");
 	numPredictions += 1;
-	meanPredictions = (((numPredictions-1) * meanPredictions) + (currentPredictions == hardCodedDigit)) / numPredictions;
+	meanPredictions = (((numPredictions-1) * meanPredictions) + (currentPredictions == 6)) / numPredictions;
 	console.log(numPredictions + ", " + meanPredictions + ", " + currentPredictions);
 	//testingSampleIndex++;
 
@@ -226,12 +226,26 @@ function Train()
 	trainingCompleted = true;
 	for (var tensorIterator = 0; tensorIterator < train3.shape[3]; tensorIterator++)
 	{
-		var features = train3.pick(null, null, null, tensorIterator);
-		features = features.reshape(120);
-		knnClassifier.addExample(features.tolist(), 3);
-		features = train2.pick(null, null, null, tensorIterator);
-		features = features.reshape(120);
-		knnClassifier.addExample(features.tolist(), 2);
+		var features3 = train3.pick(null, null, null, tensorIterator).reshape(120);
+		knnClassifier.addExample(features3.tolist(), 3);
+
+		var features2 = train2.pick(null, null, null, tensorIterator).reshape(120);
+		knnClassifier.addExample(features2.tolist(), 2);
+
+		var features4 = train4.pick(null, null, null, tensorIterator).reshape(120);;
+		knnClassifier.addExample(features4.tolist(), 4);
+
+		var features1 = train1.pick(null, null, null, tensorIterator).reshape(120);
+		knnClassifier.addExample(features1.tolist(), 1);
+
+		var features0 = train0.pick(null, null, null, tensorIterator).reshape(120);;
+		knnClassifier.addExample(features0.tolist(), 0);
+
+		var features5 = train5.pick(null, null, null, tensorIterator).reshape(120);;
+		knnClassifier.addExample(features5.tolist(), 5);
+
+		var features6 = train6.pick(null, null, null, tensorIterator).reshape(120);;
+		knnClassifier.addExample(features6.tolist(), 6);
 		//console.log(tensorIterator + " " + features.toString());
 		
 	}
