@@ -51,12 +51,12 @@ function GotResults(err, result)
 
 	
 	var currentPredictions = result.label;
-	//console.log(result.label);
+	console.log(result.label);
 	
 	//console.log("b");
 	numPredictions += 1;
-	meanPredictions = (((numPredictions-1) * meanPredictions) + (currentPredictions == 3)) / numPredictions;
-	//console.log(numPredictions + ", " + meanPredictions + ", " + currentPredictions);
+	meanPredictions = (((numPredictions-1) * meanPredictions) + (currentPredictions == hardCodedDigit)) / numPredictions;
+	console.log(numPredictions + ", " + meanPredictions + ", " + currentPredictions);
 	//testingSampleIndex++;
 
 	//if (testingSampleIndex >= test.shape[3])
@@ -314,7 +314,7 @@ function CenterZData()
 		}
 	}
 	var currentMean = zValues.mean();
-	console.log(currentMean);
+	//console.log(currentMean);
 }
 
 
