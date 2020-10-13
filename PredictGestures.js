@@ -240,6 +240,8 @@ function Train()
 // test function, test knn classifier
 function Test()
 {
+	CenterData();
+
 	currentFeatures = oneFrameOfData.pick(null, null, null, 0);
 	
 	predictedLabel = knnClassifier.classify(currentFeatures.tolist(), GotResults);
@@ -247,7 +249,10 @@ function Test()
 
 function CenterData()
 {
-
+	var xValues = oneFrameOfData.slice([],[],[0,6,3]);
+	var currentMean = xValues.mean();
+	//console.log(xValues.shape);
+	console.log(currentMean);
 }
 
 
