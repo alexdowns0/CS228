@@ -39,10 +39,15 @@ function DetermineState(frame)
 	{
 		programState = 0;
 	}
-	else 
+	else if (HandIsUncentered())
 	{
 		programState = 1;
 	}
+	else
+	{
+		programState = 2;
+	}
+
 }
 
 function HandleState0(frame)
@@ -67,11 +72,16 @@ function TrainKNNIfNotDoneYet()
 	//}
 }
 
+
 function DrawImageToHelpUserPutTheirHandOverTheDevice()
 {
 	image(img, 0, 0, newXMax/2.25, newYMax/2.25);
 }
 
+function HandIsUncentered()
+{
+	
+}
 
 Leap.loop(controllerOptions, function(frame)
 {
@@ -87,8 +97,14 @@ Leap.loop(controllerOptions, function(frame)
 	{
 		HandleState1(frame);
 	}
+
+	else if (programState == 2)
+	{
+		HandleState2(frame);
+	}
 	//HandleFrame(frame);
 });
+
 
 function GotResults(err, result)
 {
