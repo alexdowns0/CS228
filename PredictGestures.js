@@ -53,15 +53,23 @@ function DetermineState(frame)
 function HandleState0(frame)
 {
 	TrainKNNIfNotDoneYet();
-	DrawImageToHelpUserPutTheirHandOverTheDevice()
+	DrawImageToHelpUserPutTheirHandOverTheDevice();
 }
 
 function HandleState1(frame)
 {
 	HandleFrame(frame);
+	if (HandIsTooFarToTheLeft())
+	{
+		DrawArrowRight();
+	}
 	// Test();
 }
 
+function DrawArrowRight()
+{
+	image(imgLeft, window.innerWidth, 0, newXMax/2.25, newYMax/2.25);
+}
 function TrainKNNIfNotDoneYet()
 {
 	//if (trainingCompleted == false)
@@ -80,7 +88,15 @@ function DrawImageToHelpUserPutTheirHandOverTheDevice()
 
 function HandIsUncentered()
 {
-	
+	HandIsTooFarToTheLeft();
+}
+
+function HandIsTooFarToTheLeft()
+{
+	if (CenterXData()< 0.25)
+	{
+		return true;
+	}
 }
 
 Leap.loop(controllerOptions, function(frame)
