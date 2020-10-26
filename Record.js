@@ -27,10 +27,10 @@ var b = 0;
 // HandleFrame function, returns first hand that is within frame 
 function HandleFrame(frame)
 {
-	
+	var interactionBox = frame.interactionBox;
 	// if statement to determine how many hands are in frame 
 	if(frame.hands.length == 1 || frame.hands.length == 2)
-	{	var interactionBox = frame.interactionBox;
+	{	
 		var hand = frame.hands[0];	
 		HandleHand(hand, frame, interactionBox);	
 	}
@@ -252,8 +252,9 @@ function RecordData()
 	// 	//console.log(framesOfData.toString());
 	if (currentNumHands == 2)
 	{
+		console.log(framesOfData.toString());
 		currentSample++;
-		if (currentSample == numSamples)
+		if (currentSample >= numSamples)
 		{
 			currentSample = 0;
 			

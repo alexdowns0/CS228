@@ -2,16 +2,17 @@
 
 
 // create numSamples var and currentSample var 
-
+var controllerOptions = {};
 // create variable for framesof data
 var oneFrameOfData = nj.zeros([5, 4, 6]);
 
 
 var numPredictions = 0;
 var meanPredictions = 0;
-var currentPredictions = 0;
-var hardCodedDigit = 6;
+var hardCodedDigit = 3;
 
+// add program state var del 07
+var programState = 0;
 
 // variables for window sizing 
 var newXMax = window.innerWidth;
@@ -22,26 +23,71 @@ var newYMin = 0;
 // tracking variables
 var previousNumHands = 0;
 var currentNumHands = 0;
-var controllerOptions = {};
+
 const knnClassifier = ml5.KNNClassifier();
 
-var currentFeatures;
+var currentFeatures = 0;
 var numSamples = 0;
 nj.config.printThreshold = 6;
-var predictedLabel;
-var currentLabel;
+
 var trainingCompleted = false;
 //var predictedClassLabels = nj.zeros([1,test.shape[3]]);
+
+function DetermineState(frame)
+{
+	if (frame.hands.length == 0)
+	{
+		programState = 0;
+	}
+	else 
+	{
+		programState = 1;
+	}
+}
+
+function HandleState0(frame)
+{
+	TrainKNNIfNotDoneYet();
+	DrawImageToHelpUserPutTheirHandOverTheDevice()
+}
+
+function HandleState1(frame)
+{
+	HandleFrame(frame);
+	// Test();
+}
+
+function TrainKNNIfNotDoneYet()
+{
+	//if (trainingCompleted == false)
+	//{	
+		//Train();
+
+		//trainingCompleted = true;
+	//}
+}
+
+function DrawImageToHelpUserPutTheirHandOverTheDevice()
+{
+
+}
 
 
 Leap.loop(controllerOptions, function(frame)
 {
 	clear();	
-	if (trainingCompleted == false)
-	{	
-		Train();
+	DetermineState(frame);
+
+
+	if (programState == 0)
+	{
+		HandleState0(frame);
 	}
-	HandleFrame(frame);
+	else if (programState == 1)
+	{
+		HandleState1(frame);
+	}
+	//HandleFrame(frame);
 });
 
 function GotResults(err, result)
@@ -50,13 +96,15 @@ function GotResults(err, result)
 
 
 	
-	var currentPredictions = (parseInt(result.label));
-	console.log(result.label);
+	var currentPredictions = parseInt(result.label);
+	//console.log(result.label);
 	
 	//console.log("b");
-	numPredictions += 1;
-	meanPredictions = (((numPredictions-1) * meanPredictions) + (currentPredictions == 6)) / numPredictions;
-	console.log(numPredictions + ", " + meanPredictions + ", " + currentPredictions);
+	numPredictions++;
+	//meanPredictions = (((numPredictions - 1) * meanPredictions) + (result.label == 9)) / numPredictions;
+	// FIX ME GET THIS TO PRINTT
+	//console.log(numPredictions + ", " + meanPredictions + ", " + (result.label));
+	console.log(currentPredictions);
 	//testingSampleIndex++;
 
 	//if (testingSampleIndex >= test.shape[3])
@@ -70,16 +118,17 @@ function GotResults(err, result)
 // HandleFrame function, returns first hand that is within frame 
 function HandleFrame(frame)
 {
-	
+	var interactionBox = frame.interactionBox;
 	// if statement to determine how many hands are in frame 
-	if(frame.hands.length == 1 || frame.hands.length == 2)
-	{	var interactionBox = frame.interactionBox;
+	if(frame.hands.length > 0)
+	{	
+		
 		var hand = frame.hands[0];	
 		HandleHand(hand, frame, interactionBox);	
 
 		//console.log(oneFrameOfData.toString());
 
-		Test();	
+		//Test();	
 	}
 }
 
@@ -105,13 +154,13 @@ function HandleHand(hand, frame, interactionBox)
 			var fingerIndex = fingers[fingerI].type;
 			// call handlebone function passing three variables
 			var boneIndex = bone[boneI].type;
-			HandleBone(boneIndex,boneI, bone, strokeWidth, frame, fingerIndex, interactionBox);
+			HandleBone(boneIndex, boneI, bone, strokeWidth, frame, fingerIndex, interactionBox);
 		}
 	}		
 }
 
 // HandleBone function, function to display lines indicating each bone
-function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, interactionBox)
+function HandleBone(boneIndex, boneI, bone, strokeWidth, frame, fingerIndex, interactionBox)
 {
 	// variables for base of bone x, y, and z; tip of bone x, y, and z
 	var xb = bone[boneI].nextJoint[0];
@@ -126,15 +175,15 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 
 	oneFrameOfData.set(fingerIndex, boneIndex, 0, normalizedPrevJoint[0]);
 	oneFrameOfData.set(fingerIndex, boneIndex, 1, normalizedPrevJoint[1]);
-	oneFrameOfData.set(fingerIndex, boneIndex, 2, zb);
+	oneFrameOfData.set(fingerIndex, boneIndex, 2, zt);
 	oneFrameOfData.set(fingerIndex, boneIndex, 3, normalizedNextJoint[0]);
 	oneFrameOfData.set(fingerIndex, boneIndex, 4, normalizedNextJoint[1]);
-	oneFrameOfData.set(fingerIndex, boneIndex, 5, zt);
+	oneFrameOfData.set(fingerIndex, boneIndex, 5, zb);
 
-	var canvasXPrev = newXMax * normalizedPrevJoint[0];
-	var canvasXNext = newXMax * (normalizedNextJoint[0]);
-	var canvasYPrev = newYMax * (1 - normalizedPrevJoint[1]);
-	var canvasYNext = newYMax * (1 - normalizedNextJoint[1]);
+	var canvasXPrev = (newXMax/2) * normalizedPrevJoint[0];
+	var canvasXNext = (newXMax/2) * (normalizedNextJoint[0]);
+	var canvasYPrev = (newXMax/2) * (1 - normalizedPrevJoint[1]);
+	var canvasYNext = (newXMax/2) * (1 - normalizedNextJoint[1]);
 	// variables to store color vals
 	var r = 0;
 	var g = 0;
@@ -149,7 +198,8 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			strokeWidth = 10;
 			r = 128;
 			g = 128;
-			b = 128;	
+			b = 128;
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
 		}
 
 		else if(boneIndex == 1)
@@ -157,7 +207,8 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			strokeWidth = 8;
 			r = 96;
 			g = 96;
-			b = 96;		
+			b = 96;	
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
 		}
 
 		else if(boneIndex == 2)
@@ -165,7 +216,8 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			strokeWidth = 5;
 			r = 64;
 			g = 64;
-			b = 64;		
+			b = 64;	
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
 		}
 
 		else if(boneIndex == 3)
@@ -174,6 +226,7 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			r = 32;
 			g = 32;
 			b = 32;
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
 		}
 	}
 
@@ -186,7 +239,8 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			strokeWidth = 10;
 			r = 128;
 			g = 128;
-			b = 128;		
+			b = 128;
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);		
 		}
 
 		else if(boneIndex == 1)
@@ -195,6 +249,7 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			r = 96;
 			g = 96;
 			b = 96;		
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
 		}
 
 		else if(boneIndex == 2)
@@ -203,6 +258,7 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			r = 64;
 			g = 64;
 			b = 64;		
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
 		}
 
 		else if(boneIndex == 3)
@@ -211,6 +267,7 @@ function HandleBone(boneI, boneIndex, bone, strokeWidth, frame, fingerIndex, int
 			r = 32;
 			g = 32;
 			b = 32;
+			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
 		}
 	}
 	// give hand color and width
@@ -226,43 +283,198 @@ function Train()
 	trainingCompleted = true;
 	for (var tensorIterator = 0; tensorIterator < train3.shape[3]; tensorIterator++)
 	{
-		var features3 = train3.pick(null, null, null, tensorIterator).reshape(120);
-		knnClassifier.addExample(features3.tolist(), 3);
-
-		var features2 = train2.pick(null, null, null, tensorIterator).reshape(120);
-		knnClassifier.addExample(features2.tolist(), 2);
-
-		var features4 = train4.pick(null, null, null, tensorIterator).reshape(120);;
-		knnClassifier.addExample(features4.tolist(), 4);
-
-		var features1 = train1.pick(null, null, null, tensorIterator).reshape(120);
-		knnClassifier.addExample(features1.tolist(), 1);
-
-		var features0 = train0.pick(null, null, null, tensorIterator).reshape(120);;
-		knnClassifier.addExample(features0.tolist(), 0);
-
-		var features5 = train5.pick(null, null, null, tensorIterator).reshape(120);;
-		knnClassifier.addExample(features5.tolist(), 5);
-
-		var features6 = train6.pick(null, null, null, tensorIterator).reshape(120);;
-		knnClassifier.addExample(features6.tolist(), 6);
-		//console.log(tensorIterator + " " + features.toString());
+		//trainingCompleted = true;
+		//CenterData();
 		
+
+		var features = train3B.pick(null,null,null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 3);
+		
+		
+		features = train2.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 2);
+
+		
+		features = train3.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 3);
+
+		//CenterData();
+		features = train4.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 4);
+
+		//CenterData();
+		features = train4A.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 4);
+
+		features = train4OBrien.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 4);
+
+		//CenterData();
+		features = train1.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 1);
+
+		//CenterData();
+		features = train1A.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 1);
+
+		features = train1Mc.pick(null, null, null, tensorIterator);
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 1);
+
+
+		
+		features = train0.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 0);
+
+		
+		features = train0A.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 0);
+
+		features = train0Rielly.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 0);
+
+		features = train0KLee.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 0);
+
+		//CenterData();
+		features = train0Bongard.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		// CenterData();
+		knnClassifier.addExample(features, 0);
+
+		
+		features = train5.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		// CenterData();
+		knnClassifier.addExample(features, 5);
+
+		
+		features = train5A.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 5);
+
+		features = train5Bert.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 5);
+
+
+		features = train6Bongard.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 6);
+
+
+		features = train6A.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 6);
+
+		
+		features = train6.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 6);
+
+		features = train6BL.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 6);
+
+		//CenterData();
+		features = train7.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 7);
+
+		//CenterData();
+		features = train7A.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 7);
+
+		//CenterData();
+		features = train8.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 8);
+
+		//CenterData();
+		features = train8A.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 8);
+
+
+		
+	
+		
+		
+		
+
+		
+		features = train9Mc.pick(null, null, null, tensorIterator);
+		
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 9 );
+
+
+
+
+
+		//console.log(tensorIterator + " " + features.toString());
+		//
 	}
+	//trainingCompleted = true;
 }
 
 // test function, test knn classifier
 function Test()
 {
+	
+	//for (var i; i < train3.shape[3]; i++)
+	//{
+		currentFeatures = oneFrameOfData.pick(null,null,null,0);
+		
+		//currentFeatures = currentFeatures.reshape(120).tolist();
+		knnClassifier.classify(currentFeatures.tolist(), GotResults);
+		CenterData();
+ 	//}
+}
+
+function CenterData()
+{
 	CenterXData();
 	CenterYData();
 	CenterZData();
-
-	currentFeatures = oneFrameOfData.pick(null, null, null, 0);
-	
-	predictedLabel = knnClassifier.classify(currentFeatures.tolist(), GotResults);
 }
-
 function CenterXData()
 {
 	var xValues = oneFrameOfData.slice([],[],[0,6,3]);
@@ -273,15 +485,17 @@ function CenterXData()
 	{
 		for (var column = 0; column < xValues.shape[1]; column++)
 		{
-			currentX = oneFrameOfData.get(row,column,0);
-			shiftedX = currentX + horizontalShift;
+			var currentX = oneFrameOfData.get(row,column,0);
+			var shiftedX = currentX + horizontalShift;
 			oneFrameOfData.set(row,column,0, shiftedX);
 			currentX = oneFrameOfData.get(row,column,3);
 			shiftedX = currentX + horizontalShift;
 			oneFrameOfData.set(row,column,3, shiftedX);
 		}
 	}
-	var currentMean = xValues.mean();
+	xValues = oneFrameOfData.slice([],[],[0,6,3]);
+	currentMean = xValues.mean();
+	horizontalShift = (0.5 - currentMean);
 	//console.log(xValues.shape);
 	//console.log(currentMean);
 	//console.log(horizontalShift);
@@ -297,15 +511,17 @@ function CenterYData()
 	{
 		for (var column = 0; column < yValues.shape[1]; column++)
 		{
-			currentY = oneFrameOfData.get(row,column,1);
-			shiftedY = currentY + verticalShift;
+			var currentY = oneFrameOfData.get(row,column,1);
+			var shiftedY = currentY + verticalShift;
 			oneFrameOfData.set(row,column,1, shiftedY);
 			currentY = oneFrameOfData.get(row,column,4);
 			shiftedY = currentY + verticalShift;
 			oneFrameOfData.set(row,column,4, shiftedY);
 		}
 	}
-	var currentMean = yValues.mean();
+	yValues = oneFrameOfData.slice([],[],[1,6,3]);
+	currentMean = yValues.mean();
+	verticalShift = (0.5 - currentMean);
 	//console.log(currentMean);
 }
 
@@ -313,21 +529,23 @@ function CenterZData()
 {
 	var zValues = oneFrameOfData.slice([],[],[2,6,3]);
 	var currentMean = zValues.mean();
-	var verticalShift = (0.5 - currentMean);
+	var zShift = (0.5 - currentMean);
 
 	for (var row = 0; row < zValues.shape[0]; row++)
 	{
 		for (var column = 0; column < zValues.shape[1]; column++)
 		{
-			currentZ = oneFrameOfData.get(row,column,2);
-			shiftedZ = currentZ + verticalShift;
+			var currentZ = oneFrameOfData.get(row,column,2);
+			var shiftedZ = currentZ + zShift;
 			oneFrameOfData.set(row,column,2, shiftedZ);
 			currentZ = oneFrameOfData.get(row,column,5);
-			shiftedZ = currentZ + verticalShift;
+			shiftedZ = currentZ + zShift;
 			oneFrameOfData.set(row,column,5, shiftedZ);
 		}
 	}
-	var currentMean = zValues.mean();
+	zValues = oneFrameOfData.slice([],[],[2,6,3]);
+	currentMean = zValues.mean();
+	zShift = (0.5 - currentMean);
 	//console.log(currentMean);
 }
 
