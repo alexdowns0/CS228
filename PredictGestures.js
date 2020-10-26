@@ -69,7 +69,7 @@ function TrainKNNIfNotDoneYet()
 
 function DrawImageToHelpUserPutTheirHandOverTheDevice()
 {
-
+	image(img, 0, 0, newXMax/2.25, newYMax/2.25);
 }
 
 
