@@ -1,4 +1,10 @@
 var img;
+var imgLeft;
+var imgRight;
+var imgToward;
+var imgAway;
+var imgUp;
+var imgDown;
 
 function setup() 
 { 

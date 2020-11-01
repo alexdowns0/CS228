@@ -39,7 +39,7 @@ function DetermineState(frame)
 	{
 		programState = 0;
 	}
-	else if (HandIsUncentered())
+	else if (frame.hands.length == 1)
 	{
 		programState = 1;
 	}
@@ -59,17 +59,68 @@ function HandleState0(frame)
 function HandleState1(frame)
 {
 	HandleFrame(frame);
+	//HandleFrame(frame);
 	if (HandIsTooFarToTheLeft())
 	{
 		DrawArrowRight();
+		console.log("too far left");
 	}
-	// Test();
+
+	else if (HandIsTooFarToTheRight())
+	{
+		DrawArrowLeft();
+		console.log("too far right");
+	}
+
+	else if (HandIsTooHigh())
+	{
+		DrawArrowDown();
+	}
+
+	else if (HandIsTooLow())
+	{
+		DrawArrowUp();
+	}
+
+	else if (HandIsTooClose())
+	{
+		DrawArrowAway();
+	}
+
+	else if (HandIsTooFar())
+	{
+		DrawArrowClose();
+	}
+	//Test();
+	
 }
 
-function DrawArrowRight()
+function DrawArrowClose()
 {
-	image(imgLeft, window.innerWidth, 0, newXMax/2.25, newYMax/2.25);
+	image(imgAway, window.innerWidth/2, 0,window.innerWidth/2, window.innerHeight/2);
 }
+function DrawArrowAway()
+{
+	image(imgToward, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
+}
+
+function DrawArrowDown()
+{
+	image(imgUp, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
+}
+
+function DrawArrowUp()
+{
+	image(imgDown, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
+}
+
+function HandleState2(frame)
+{
+	HandleFrame(frame);
+	//Test();
+}
+
+
 function TrainKNNIfNotDoneYet()
 {
 	//if (trainingCompleted == false)
@@ -83,21 +134,115 @@ function TrainKNNIfNotDoneYet()
 
 function DrawImageToHelpUserPutTheirHandOverTheDevice()
 {
-	image(img, 0, 0, newXMax/2.25, newYMax/2.25);
+	image(img, 0, 0, (window.innerWidth)/2, (window.innerHeight)/2);
 }
 
 function HandIsUncentered()
 {
-	HandIsTooFarToTheLeft();
+	
+	if (HandIsTooFarToTheLeft() || HandIsTooFarToTheRight() || HandIsTooLow() || HandIsTooHigh() || HandIsTooClose() || HandIsTooFar())
+	{
+		return true;
+		
+	}
+	else 
+	{
+		return false;
+		
+	}
+
+	//return HandIsTooFarToTheLeft();
 }
 
-function HandIsTooFarToTheLeft()
+
+function HandIsTooHigh()
 {
-	if (CenterXData()< 0.25)
+	var yValues = oneFrameOfData.slice([],[],[1,6,3]);
+	var currentMean = yValues.mean();
+	if (currentMean > 0.75)
 	{
 		return true;
 	}
+	else
+	{
+		return false;
+	}
 }
+
+function HandIsTooLow()
+{
+	var yValues = oneFrameOfData.slice([],[],[1,6,3]);
+	var currentMean = yValues.mean();
+	if (currentMean < 0.25)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+function HandIsTooFarToTheLeft()
+{
+	var xValues = oneFrameOfData.slice([],[],[0,6,3]);
+	var currentMean = xValues.mean();
+	if (currentMean < 0.25)
+	{
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
+}
+
+function HandIsTooClose()
+{
+	zValues = oneFrameOfData.slice([],[],[2,6,3]);
+    currentMean = zValues.mean();
+    if(currentMean < .25)
+    {
+        return true;
+    }
+    
+}
+
+function HandIsTooFar()
+{
+	zValues = oneFrameOfData.slice([],[],[2,6,3]);
+    currentMean = zValues.mean();
+    if (currentMean > .75)
+    {
+        return true;
+    }
+}
+
+function HandIsTooFarToTheRight()
+{
+
+	var xValues = oneFrameOfData.slice([],[],[0,6,3]);
+	var currentMean = xValues.mean();
+	if (currentMean > 0.75)
+	{
+		return true;
+	}
+	else 
+	{
+		return false;
+	}
+	
+}
+function DrawArrowRight()
+{
+	image(imgRight, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
+	console.log("move ur hand right now");
+}
+
+function DrawArrowLeft()
+{
+	image(imgLeft, 0, 0, (window.innerWidth)/2, (window.innerHeight)/2);
+}
+
 
 Leap.loop(controllerOptions, function(frame)
 {
@@ -128,7 +273,7 @@ function GotResults(err, result)
 
 
 	
-	var currentPredictions = parseInt(result.label);
+	//var currentPredictions = parseInt(result.label);
 	//console.log(result.label);
 	
 	//console.log("b");
@@ -136,7 +281,7 @@ function GotResults(err, result)
 	//meanPredictions = (((numPredictions - 1) * meanPredictions) + (result.label == 9)) / numPredictions;
 	// FIX ME GET THIS TO PRINTT
 	//console.log(numPredictions + ", " + meanPredictions + ", " + (result.label));
-	console.log(currentPredictions);
+	console.log(parseInt.result.label);
 	//testingSampleIndex++;
 
 	//if (testingSampleIndex >= test.shape[3])
@@ -152,6 +297,7 @@ function HandleFrame(frame)
 {
 	var interactionBox = frame.interactionBox;
 	// if statement to determine how many hands are in frame 
+	//Test();	
 	if(frame.hands.length > 0)
 	{	
 		
@@ -160,7 +306,7 @@ function HandleFrame(frame)
 
 		//console.log(oneFrameOfData.toString());
 
-		//Test();	
+		
 	}
 }
 
