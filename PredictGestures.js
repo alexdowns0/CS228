@@ -33,6 +33,14 @@ nj.config.printThreshold = 6;
 var trainingCompleted = false;
 //var predictedClassLabels = nj.zeros([1,test.shape[3]]);
 
+// SignIn() function
+function SignIn()
+{
+	//console.log('Sign in');
+	username = document.getElementById(’username’).value;
+	console.log(username);
+}
+
 function DetermineState(frame)
 {
 	if (frame.hands.length == 0)
