@@ -39,14 +39,34 @@ function SignIn()
 	//console.log('Sign in');
 	username = document.getElementById('username').value;
 	var list = document.getElementById('users');
-	var item = document.createElement('li');
-	//console.log(username);
-	item.innerHTML = String(username);
-   	list.appendChild(item);
+	if (IsNewUser(username,list))
+	{
+		var item = document.createElement('li');
+		//console.log(username);
+		item.innerHTML = String(username);
+	   	list.appendChild(item);
 
-   console.log(list.innerHTML);
-
+   		
+	}
+	console.log(list.innerHTML);
    return false;
+}
+
+function IsNewUser(username, list)
+{
+	//console.log(list.innerHTML);
+	var usernameFound = false;
+	var users = list.children;
+	for (var i = 0; i < users.length; i++)
+	{
+		if (username == users[i].innerHTML)
+		{
+			usernameFound = true;
+		}
+		//console.log(users[i] + " " + users[i].innerHTML);
+
+	}
+	return usernameFound == false;
 }
 
 function DetermineState(frame)
