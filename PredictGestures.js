@@ -35,6 +35,10 @@ nj.config.printThreshold = 6;
 var trainingCompleted = false;
 //var predictedClassLabels = nj.zeros([1,test.shape[3]]);
 
+
+// timeSinceLastDigit var 
+var timeSinceLastDigitChange = new Date();
+
 // SignIn() function
 function SignIn()
 {
@@ -179,6 +183,7 @@ function HandleState2(frame)
 
 	HandleFrame(frame);
 	DrawLowerRightPanel();
+	DetermineWhetherToSwitchDigits();
 	//Test();
 }
 
@@ -196,6 +201,31 @@ function DrawLowerRightPanel()
 	}
 }
 
+function DetermineWhetherToSwitchDigits()
+{
+	if (TimeToSwitchDigits() == true)
+	{
+		SwitchDigits();
+	}
+
+}
+
+function SwitchDigits()
+{
+	if (digitToShow == 4)
+	{
+		digitToShow = 2;
+	}
+	else 
+	{
+		digitToShow = 4;
+	}
+}
+
+function TimeToSwitchDigits()
+{
+	return false;
+}
 function TrainKNNIfNotDoneYet()
 {
 	//if (trainingCompleted == false)
