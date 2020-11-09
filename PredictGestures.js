@@ -6,11 +6,8 @@ var controllerOptions = {};
 // create variable for framesof data
 var oneFrameOfData = nj.zeros([5, 4, 6]);
 
-// variables to show digits pointed to
-var showFour = 0;
-var showTwo = 0;
 
-var digitToShow = showFour;
+var digitToShow = 4;
 
 var numPredictions = 0;
 var meanPredictions = 0;
@@ -102,7 +99,7 @@ function DetermineState(frame)
 	{
 		programState = 0;
 	}
-	else if (frame.hands.length == 1)
+	else if (HandIsUncentered())
 	{
 		programState = 1;
 	}
@@ -126,13 +123,13 @@ function HandleState1(frame)
 	if (HandIsTooFarToTheLeft())
 	{
 		DrawArrowRight();
-		console.log("too far left");
+		
 	}
 
 	else if (HandIsTooFarToTheRight())
 	{
 		DrawArrowLeft();
-		console.log("too far right");
+		
 	}
 
 	else if (HandIsTooHigh())
@@ -185,6 +182,19 @@ function HandleState2(frame)
 	//Test();
 }
 
+
+function DrawLowerRightPanel()
+{
+	if (digitToShow == 4)
+	{
+		image(showDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+
+	}
+	else
+	{
+		image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+}
 
 function TrainKNNIfNotDoneYet()
 {
@@ -322,10 +332,10 @@ Leap.loop(controllerOptions, function(frame)
 	else if (programState == 1)
 	{
 		HandleState1(frame);
-		HandleState2(frame);
+		
 	}
 
-	else if (programState == 2)
+	else 
 	{
 		HandleState2(frame);
 	}

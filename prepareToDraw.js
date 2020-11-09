@@ -5,6 +5,8 @@ var imgToward;
 var imgAway;
 var imgUp;
 var imgDown;
+var showDigit2;
+var showDigit4;
 
 function setup() 
 { 
@@ -16,4 +18,7 @@ function setup()
 	imgAway = loadImage('https://i.postimg.cc/Z5cSZj09/arrow-Away.png');
 	imgUp = loadImage('https://i.postimg.cc/qvKb07Rz/arrowUp.png');
 	imgDown = loadImage('https://i.postimg.cc/jSyXmkgf/arrow-Down.png');
+
+	showDigit2 = loadImage('https://i.imgur.com/UHo92Gs.jpg');
+	showDigit4 = loadImage('https://i.imgur.com/nfFYLLR.jpg');
 }
