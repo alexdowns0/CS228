@@ -10,6 +10,7 @@ var oneFrameOfData = nj.zeros([5, 4, 6]);
 var showFour = 0;
 var showTwo = 0;
 
+var digitToShow = showFour;
 
 var numPredictions = 0;
 var meanPredictions = 0;
@@ -178,7 +179,9 @@ function DrawArrowUp()
 
 function HandleState2(frame)
 {
+
 	HandleFrame(frame);
+	DrawLowerRightPanel();
 	//Test();
 }
 
@@ -319,6 +322,7 @@ Leap.loop(controllerOptions, function(frame)
 	else if (programState == 1)
 	{
 		HandleState1(frame);
+		HandleState2(frame);
 	}
 
 	else if (programState == 2)
