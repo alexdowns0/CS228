@@ -6,6 +6,10 @@ var controllerOptions = {};
 // create variable for framesof data
 var oneFrameOfData = nj.zeros([5, 4, 6]);
 
+// variables to show digits pointed to
+var showFour = 0;
+var showTwo = 0;
+
 
 var numPredictions = 0;
 var meanPredictions = 0;
@@ -258,7 +262,7 @@ function HandIsTooClose()
 {
 	zValues = oneFrameOfData.slice([],[],[2,6,3]);
     currentMean = zValues.mean();
-    if(currentMean < .25)
+    if(currentMean < .02)
     {
         return true;
     }
@@ -269,7 +273,7 @@ function HandIsTooFar()
 {
 	zValues = oneFrameOfData.slice([],[],[2,6,3]);
     currentMean = zValues.mean();
-    if (currentMean > .75)
+    if (currentMean > 10.75)
     {
         return true;
     }
@@ -762,6 +766,7 @@ function CenterYData()
 }
 
 function CenterZData()
+//if z is less than 0 and greater than 1
 {
 	var zValues = oneFrameOfData.slice([],[],[2,6,3]);
 	var currentMean = zValues.mean();
