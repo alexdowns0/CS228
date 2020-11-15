@@ -39,6 +39,7 @@ var trainingCompleted = false;
 // timeSinceLastDigit var 
 var timeSinceLastDigitChange = new Date();
 
+
 // SignIn() function
 function SignIn()
 {
@@ -60,7 +61,7 @@ function SignIn()
 		listItem.innerHTML = parseInt(listItem.innerHTML) + 1;
 	}
 
-	console.log(list.innerHTML);
+	//console.log(list.innerHTML);
    return false;
 }
 
@@ -116,7 +117,7 @@ function DetermineState(frame)
 
 function HandleState0(frame)
 {
-	TrainKNNIfNotDoneYet();
+
 	DrawImageToHelpUserPutTheirHandOverTheDevice();
 }
 
@@ -212,6 +213,7 @@ function DetermineWhetherToSwitchDigits()
 
 function SwitchDigits()
 {
+	numPredictions = 0;
 	if (digitToShow == 4)
 	{
 		digitToShow = 2;
@@ -224,17 +226,17 @@ function SwitchDigits()
 
 function TimeToSwitchDigits()
 {
-	return false;
-}
-function TrainKNNIfNotDoneYet()
-{
-	//if (trainingCompleted == false)
-	//{	
-		//Train();
+	var currentTime = new Date();
+	var timePassedInMilliseconds = currentTime - timeSinceLastDigitChange;
+	var timePassedInSeconds = timePassedInMilliseconds/1000.0;
 
-		//trainingCompleted = true;
-	//}
+	if (timePassedInSeconds > 10)
+	{
+		timeSinceLastDigitChange = currentTime;
+		return true;
+	}
 }
+
 
 
 function DrawImageToHelpUserPutTheirHandOverTheDevice()
@@ -340,7 +342,7 @@ function HandIsTooFarToTheRight()
 function DrawArrowRight()
 {
 	image(imgRight, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
-	console.log("move ur hand right now");
+	//console.log("move ur hand right now");
 }
 
 function DrawArrowLeft()
@@ -352,6 +354,12 @@ function DrawArrowLeft()
 Leap.loop(controllerOptions, function(frame)
 {
 	clear();	
+	if (trainingCompleted == false)
+	{	
+		Train();
+
+		//trainingCompleted = true;
+	}
 	DetermineState(frame);
 
 
@@ -384,10 +392,10 @@ function GotResults(err, result)
 	
 	//console.log("b");
 	numPredictions++;
-	//meanPredictions = (((numPredictions - 1) * meanPredictions) + (result.label == 9)) / numPredictions;
+	meanPredictions = (((numPredictions - 1) * meanPredictions) + (result.label == digitToShow)) / numPredictions;
 	// FIX ME GET THIS TO PRINTT
-	//console.log(numPredictions + ", " + meanPredictions + ", " + (result.label));
-	console.log(parseInt.result.label);
+	console.log(numPredictions + ", " + meanPredictions + ", " +  result.label);
+	//console.log(result);
 	//testingSampleIndex++;
 
 	//if (testingSampleIndex >= test.shape[3])
@@ -409,7 +417,7 @@ function HandleFrame(frame)
 		
 		var hand = frame.hands[0];	
 		HandleHand(hand, frame, interactionBox);	
-
+		Test();
 		//console.log(oneFrameOfData.toString());
 
 		
@@ -469,97 +477,138 @@ function HandleBone(boneIndex, boneI, bone, strokeWidth, frame, fingerIndex, int
 	var canvasYPrev = (newXMax/2) * (1 - normalizedPrevJoint[1]);
 	var canvasYNext = (newXMax/2) * (1 - normalizedNextJoint[1]);
 	// variables to store color vals
-	var r = 0;
-	var g = 0;
-	var b = 0;
+	//var r = 0;
+	//var g = 0;
+	//var b = 0;
 	
+	//var width = 4;
 	// if one hand is in frame, the hand is green
-	if(frame.hands.length == 1)
+
+
+//Determine strokeWeight
+	var width = 6;
+
+	if (boneIndex == 0)
 	{
-		// if statements to indicate darker bones are bones father from hand
-		if(boneIndex == 0)
-		{
-			strokeWidth = 10;
-			r = 128;
-			g = 128;
-			b = 128;
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
-		}
-
-		else if(boneIndex == 1)
-		{
-			strokeWidth = 8;
-			r = 96;
-			g = 96;
-			b = 96;	
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
-		}
-
-		else if(boneIndex == 2)
-		{
-			strokeWidth = 5;
-			r = 64;
-			g = 64;
-			b = 64;	
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
-		}
-
-		else if(boneIndex == 3)
-		{
-			strokeWidth = 5;
-			r = 32;
-			g = 32;
-			b = 32;
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-		}
-	}
-
-	// if two hands are in frame, the hand turns red
-	else if(frame.hands.length == 2)
+		strokeWeight(10);
+		stroke(200*(1-meanPredictions), 300*meanPredictions, 20);
+	} 
+	else if (boneIndex == 1)
 	{
-		// if statements to indicate darker bones are bones father from hand
-		if(boneIndex == 0)
-		{
-			strokeWidth = 10;
-			r = 128;
-			g = 128;
-			b = 128;
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);		
-		}
-
-		else if(boneIndex == 1)
-		{
-			strokeWidth = 8;
-			r = 96;
-			g = 96;
-			b = 96;		
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-		}
-
-		else if(boneIndex == 2)
-		{
-			strokeWidth = 5;
-			r = 64;
-			g = 64;
-			b = 64;		
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-		}
-
-		else if(boneIndex == 3)
-		{
-			strokeWidth = 5;
-			r = 32;
-			g = 32;
-			b = 32;
-			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-		}
+		strokeWeight(8); 
+		stroke((200*(1-meanPredictions))-50, (300*meanPredictions)-50, 20);
+	} 
+	else if (boneIndex == 2)
+	{
+		strokeWeight(5); 
+		stroke((200*(1-meanPredictions))-100, (300*meanPredictions)-100, 20);
+	} 
+	else if (boneIndex == 3) 
+	{
+		strokeWeight(3);
+		stroke((200*(1-meanPredictions))-150, (300*meanPredictions)-150, 20);
+	
 	}
-	// give hand color and width
-	stroke(r,g,b);
-	strokeWeight(strokeWidth);
-	// draw those hand lines
+	// draw those hand lines 
 	line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
 }
+
+
+	// if(frame.hands.length == 1 )
+	// {
+	// 	// if statements to indicate darker bones are bones father from hand
+	// 	if(boneIndex == 0)
+	// 	{
+	// 		strokeWidth = 10;
+	// 		r = 240;
+	// 		g = 7;
+	// 		b = 7;
+			
+	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
+	// 	}
+
+	// 	else if(boneIndex == 1)
+	// 	{
+	// 		strokeWidth = 8;
+	// 		r = 204;
+	// 		g = 8;
+	// 		b = 8;
+		
+	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
+	// 	}
+
+	// 	else if(boneIndex == 2)
+	// 	{
+	// 		strokeWidth = 5;
+			
+	// 		r = 143;
+	// 		g = 3;
+	// 		b = 3;	
+
+	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
+	// 	}
+
+	// 	else if(boneIndex == 3)
+	// 	{
+	// 		strokeWidth = 5;
+		
+	// 		r = 82;
+	// 		g = 0;
+	// 		b = 0;
+	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
+	// 	}
+	// }
+
+	// if two hands are in frame, the hand turns red
+// 	else if(frame.hands.length == 2)
+// 	{
+// 		// if statements to indicate darker bones are bones father from hand
+// 		if(boneIndex == 0)
+// 		{
+// 			strokeWidth = 10;
+// 			r = 128;
+// 			g = 128;
+// 			b = 128;
+// 			stroke(230*(1-meanPredictions), 210*meanPredictions, 0);
+// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);		
+// 		}
+
+// 		else if(boneIndex == 1)
+// 		{
+// 			strokeWidth = 8;
+// 			r = 96;
+// 			g = 96;
+// 			b = 96;		
+// 			stroke((230*(1-meanPredictions))-50, (210*meanPredictions)-50, 0);
+// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
+// 		}
+
+// 		else if(boneIndex == 2)
+// 		{
+// 			strokeWidth = 5;
+// 			r = 64;
+// 			g = 64;
+// 			b = 64;		
+// 			stroke((230*(1-meanPredictions))-100, (210*meanPredictions)-100, 0);
+// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
+// 		}
+
+// 		else if(boneIndex == 3)
+// 		{
+// 			strokeWidth = 5;
+// 			r = 32;
+// 			g = 32;
+// 			b = 32;
+// 			stroke((230*(1-meanPredictions))-150, (210*meanPredictions)-150, 0);
+// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
+// 		}
+// 	}
+// 	// give hand color and width
+// 	stroke(r,g,b);
+// 	strokeWeight(strokeWidth);
+// 	// draw those hand lines
+// 	line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
+// }
 
 // train function, go through all iris data and add to knnClassifier
 function Train()
@@ -715,14 +764,6 @@ function Train()
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 8);
-
-
-		
-	
-		
-		
-		
-
 		
 		features = train9Mc.pick(null, null, null, tensorIterator);
 		
@@ -730,8 +771,7 @@ function Train()
 		knnClassifier.addExample(features, 9 );
 
 
-
-
+		
 
 		//console.log(tensorIterator + " " + features.toString());
 		//
