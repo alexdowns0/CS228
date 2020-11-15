@@ -5,6 +5,7 @@ var imgToward;
 var imgAway;
 var imgUp;
 var imgDown;
+var showDigit0;
 var showDigit1;
 var showDigit2;
 var showDigit3;
@@ -26,11 +27,12 @@ function setup()
 	imgUp = loadImage('https://i.postimg.cc/qvKb07Rz/arrowUp.png');
 	imgDown = loadImage('https://i.postimg.cc/jSyXmkgf/arrow-Down.png');
 
+	showDigit0 = loadImage('https://i.imgur.com/o1QtLKT.jpg');
 	showDigit1 = loadImage('https://i.imgur.com/jaY11oj.jpg');
 	showDigit2 = loadImage('https://i.imgur.com/UHo92Gs.jpg');
 	showDigit3 = loadImage('https://i.imgur.com/3NTxKZH.jpg');
 	showDigit4 = loadImage('https://i.imgur.com/nfFYLLR.jpg');
-	showDigit5 = loadImge('https://i.imgur.com/gpTky9s.jpg');
+	showDigit5 = loadImage('https://i.imgur.com/gpTky9s.jpg');
 	showDigit6 = loadImage('https://i.imgur.com/nBDDVw4.jpg');
 	showDigit7 = loadImage('https://i.imgur.com/jfY86SC.jpg');
 	showDigit8 = loadImage('https://i.imgur.com/BgY0Wow.jpg');

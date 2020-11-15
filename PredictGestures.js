@@ -7,7 +7,7 @@ var controllerOptions = {};
 var oneFrameOfData = nj.zeros([5, 4, 6]);
 
 
-var digitToShow = 4;
+
 
 var numPredictions = 0;
 var meanPredictions = 0;
@@ -34,7 +34,7 @@ nj.config.printThreshold = 6;
 
 var trainingCompleted = false;
 //var predictedClassLabels = nj.zeros([1,test.shape[3]]);
-
+var digitToShow = 9;
 
 // timeSinceLastDigit var 
 var timeSinceLastDigitChange = new Date();
@@ -191,15 +191,48 @@ function HandleState2(frame)
 
 function DrawLowerRightPanel()
 {
-	if (digitToShow == 4)
+	if (digitToShow == 9)
+	{
+		image(showDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 8)
+	{
+		image(showDigit8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 7)
+	{
+		image(showDigit7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 6)
+	{
+		image(showDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 5)
+	{
+		image(showDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 4)
 	{
 		image(showDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 
 	}
-	else
+	else if (digitToShow == 3)
+	{
+		image(showDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 2)
 	{
 		image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
+	else if (digitToShow == 1)
+	{
+		image(showDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	else if (digitToShow == 0)
+	{
+		image(showDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	}
+	
 }
 
 function DetermineWhetherToSwitchDigits()
@@ -214,13 +247,45 @@ function DetermineWhetherToSwitchDigits()
 function SwitchDigits()
 {
 	numPredictions = 0;
-	if (digitToShow == 4)
+	if (digitToShow == 9)
+	{
+		digitToShow = 8;
+	}
+	else if (digitToShow == 8)
+	{
+		digitToShow = 7;
+	}
+	else if (digitToShow == 7)
+	{
+		digitToShow = 6;
+	}
+	else if (digitToShow == 6)
+	{
+		digitToShow = 5;
+	}
+	else if (digitToShow == 5)
+	{
+		digitToShow = 4;
+	}
+	else if (digitToShow == 4)
+	{
+		digitToShow = 3;
+	}
+	else if (digitToShow == 3)
 	{
 		digitToShow = 2;
 	}
-	else 
+	else if (digitToShow == 2)
 	{
-		digitToShow = 4;
+		digitToShow = 1;
+	}
+	else if (digitToShow == 1)
+	{
+		digitToShow = 0;
+	}
+	else if (digitToShow == 0)
+	{
+		digitToShow = 9;
 	}
 }
 
@@ -230,7 +295,8 @@ function TimeToSwitchDigits()
 	var timePassedInMilliseconds = currentTime - timeSinceLastDigitChange;
 	var timePassedInSeconds = timePassedInMilliseconds/1000.0;
 
-	if (timePassedInSeconds > 10)
+	// added if meanPredictions is greater than .55
+	if (timePassedInSeconds > 10 && meanPredictions > .3)
 	{
 		timeSinceLastDigitChange = currentTime;
 		return true;
@@ -677,7 +743,7 @@ function Train()
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 0);
 
-		
+		CenterData();
 		features = train0A.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
@@ -741,27 +807,30 @@ function Train()
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 6);
 
-		//CenterData();
+		
 		features = train7.pick(null, null, null, tensorIterator);
-		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 7);
 
 		//CenterData();
 		features = train7A.pick(null, null, null, tensorIterator);
-		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 7);
 
-		//CenterData();
+		CenterData();
 		features = train8.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 8);
 
-		//CenterData();
+		
 		features = train8A.pick(null, null, null, tensorIterator);
-		CenterData();
+		
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 8);
+		
+		features = train8A2.pick(null, null, null, tensorIterator);
+		
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 8);
 		
@@ -769,6 +838,17 @@ function Train()
 		
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 9 );
+
+		features = train9A.pick(null, null, null, tensorIterator);
+		
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 9 );
+
+		features = train9B.pick(null, null, null, tensorIterator);
+		
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 9 );
+
 
 
 		
