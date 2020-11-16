@@ -218,19 +218,19 @@ function DrawLowerRightPanel()
 	}
 	else if (digitToShow == 3)
 	{
-		image(showDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(showApple3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 2)
 	{
-		image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(showApple2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 1)
 	{
-		image(showDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(showApple1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 0)
 	{
-		image(showDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(showApple0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	
 }
@@ -296,7 +296,7 @@ function TimeToSwitchDigits()
 	var timePassedInSeconds = timePassedInMilliseconds/1000.0;
 
 	// added if meanPredictions is greater than .55
-	if (timePassedInSeconds > 10 && meanPredictions > .3)
+	if (timePassedInSeconds > 5 || meanPredictions > .3)
 	{
 		timeSinceLastDigitChange = currentTime;
 		return true;
@@ -685,48 +685,53 @@ function Train()
 		//trainingCompleted = true;
 		//CenterData();
 		
-
+		CenterData();
 		var features = train3B.pick(null,null,null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 3);
 		
-		
+		CenterData();
 		features = train2.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 2);
 
-		
+		CenterData();
+		features = train2A2.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 2);
+
+		CenterData();
 		features = train3.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 3);
 
-		//CenterData();
+		CenterData();
 		features = train4.pick(null, null, null, tensorIterator);
-		CenterData();
+		
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 4);
 
-		//CenterData();
+		CenterData();
 		features = train4A.pick(null, null, null, tensorIterator);
-		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 4);
-
+		CenterData();
 		features = train4OBrien.pick(null, null, null, tensorIterator);
-		CenterData();
+		
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 4);
 
-		//CenterData();
+		CenterData();
 		features = train1.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 1);
 
-		//CenterData();
+		CenterData();
 		features = train1A.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
@@ -737,7 +742,7 @@ function Train()
 		knnClassifier.addExample(features, 1);
 
 
-		
+		CenterData();
 		features = train0.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
@@ -748,14 +753,19 @@ function Train()
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 0);
+		CenterData();
+		features = train0A2.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 0);
 
 		features = train0Rielly.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 0);
-
-		features = train0KLee.pick(null, null, null, tensorIterator);
 		CenterData();
+		features = train0KLee.pick(null, null, null, tensorIterator);
+		
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 0);
 
@@ -784,25 +794,35 @@ function Train()
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 5);
 
+		CenterData();
 
 		features = train6Bongard.pick(null, null, null, tensorIterator);
+		
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 6);
 
 
+		CenterData();
 		features = train6A.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 6);
 
-		
-		features = train6.pick(null, null, null, tensorIterator);
+		CenterData();
+		features = train6A2.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 6);
+		CenterData();
+		features = train6.pick(null, null, null, tensorIterator);
+		features = features.reshape(120).tolist();
+		knnClassifier.addExample(features, 6);
 
+		CenterData();
 		features = train6BL.pick(null, null, null, tensorIterator);
+		
+
 		CenterData();
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 6);

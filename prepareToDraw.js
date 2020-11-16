@@ -15,6 +15,10 @@ var showDigit6;
 var showDigit7;
 var showDigit8;
 var showDigit9;
+var showApple0;
+var showApple1;
+var showApple2;
+var showApple3;
 
 function setup() 
 { 
@@ -37,4 +41,9 @@ function setup()
 	showDigit7 = loadImage('https://i.imgur.com/jfY86SC.jpg');
 	showDigit8 = loadImage('https://i.imgur.com/BgY0Wow.jpg');
 	showDigit9 = loadImage('https://i.imgur.com/oDWtvuU.jpg');
+	showApple0 = loadImage('https://i.imgur.com/WoCiX6U.jpg');
+	showApple1 = loadImage('https://i.imgur.com/cRAp5S2.jpg');
+	showApple2 = loadImage('https://i.imgur.com/76Q1IDA.jpg');
+	showApple3 = loadImage('https://i.imgur.com/WsAM1d8.jpg');
+
 }
