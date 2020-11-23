@@ -205,11 +205,11 @@ function DrawLowerRightPanel()
 	}
 	else if (digitToShow == 6)
 	{
-		image(showDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(mathDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 5)
 	{
-		image(showDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(mathDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 4)
 	{
@@ -218,19 +218,19 @@ function DrawLowerRightPanel()
 	}
 	else if (digitToShow == 3)
 	{
-		image(showApple3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(mathDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 2)
 	{
-		image(showApple2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 1)
 	{
-		image(showApple1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	else if (digitToShow == 0)
 	{
-		image(showApple0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 	}
 	
 }
@@ -296,7 +296,8 @@ function TimeToSwitchDigits()
 	var timePassedInSeconds = timePassedInMilliseconds/1000.0;
 
 	// added if meanPredictions is greater than .55
-	if (timePassedInSeconds > 5 || meanPredictions > .3)
+	//if (timePassedInSeconds > 5 || meanPredictions > .3)
+	if (timePassedInSeconds > 3 && meanPredictions > .3)
 	{
 		timeSinceLastDigitChange = currentTime;
 		return true;
@@ -769,7 +770,7 @@ function Train()
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 0);
 
-		//CenterData();
+		CenterData();
 		features = train0Bongard.pick(null, null, null, tensorIterator);
 		CenterData();
 		features = features.reshape(120).tolist();

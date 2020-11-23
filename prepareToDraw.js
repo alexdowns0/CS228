@@ -19,6 +19,12 @@ var showApple0;
 var showApple1;
 var showApple2;
 var showApple3;
+// interimvid1 variables
+var mathDigit0;
+var mathDigit6;
+var mathDigit5;
+var mathDigit1;
+var mathDigit3;
 
 function setup() 
 { 
@@ -45,5 +51,14 @@ function setup()
 	showApple1 = loadImage('https://i.imgur.com/cRAp5S2.jpg');
 	showApple2 = loadImage('https://i.imgur.com/76Q1IDA.jpg');
 	showApple3 = loadImage('https://i.imgur.com/WsAM1d8.jpg');
+	// interimvid1 variables
+	mathDigit0 = loadImage('https://i.imgur.com/C2OkqwF.png');
+	mathDigit6 = loadImage('https://i.imgur.com/Po6qVFS.png');
+	mathDigit5 = loadImage('https://i.imgur.com/NSdAleR.png');
+	mathDigit1 = loadImage('https://i.imgur.com/4oTPMEa.png');
+	mathDigit3 = loadImage('https://i.imgur.com/fpECQDU.png');
+
+
+
 
 }
