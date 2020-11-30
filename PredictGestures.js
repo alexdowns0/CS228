@@ -39,6 +39,8 @@ var timeSinceLastDigitChange = new Date();
 
 var list;
 var username;
+var gameOver = false;
+var totalDigitsPassed;
 
 function SignIn()
 {
@@ -266,49 +268,98 @@ function DrawLowerLeftPanel()
 
 function DrawLowerRightPanel()
 {
-	if (digitToShow == 9)
+	// add a switch cas statement 
+	// console 
+	switch(digitToShow)
 	{
+		case 9:
 		image(showDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		
-	}
-	else if (digitToShow == 8)
-	{
+		break;
+
+		case 8: 
 		image(showDigit8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 7)
-	{
+		break;
+
+		case 7:
 		image(showDigit7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 6)
-	{
+		break;
+		case 6: 
 		image(mathDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 5)
-	{
+		break;
+		case 5:
 		image(mathDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 4)
-	{
+		break;
+		case 4:
 		image(showDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		break;
+		case 3:
+		image(mathDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		break;
+		case 2:
+		image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		break;
+		case 1: 
+		image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		break;
+		case 0: 
+		image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		digitToShow = digitToShow - 1;
+		break;
+
+		default:
+		text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 
 	}
-	else if (digitToShow == 3)
-	{
-		image(mathDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 2)
-	{
-		image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 1)
-	{
-		image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	}
-	else if (digitToShow == 0)
-	{
-		image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	//if (digitToShow == 9)
+	//{
+	//	image(showDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	//	
+	//}
+	// else if (digitToShow == 8)
+	// {
+	// 	image(showDigit8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
+	// else if (digitToShow == 7)
+	// {
+	// 	image(showDigit7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
+	// else if (digitToShow == 6)
+	// {
+	// 	image(mathDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
+	// else if (digitToShow == 5)
+	// {
+	// 	image(mathDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
+	// else if (digitToShow == 4)
+	// {
+	// 	image(showDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+
+	// }
+	// else if (digitToShow == 3)
+	// {
+	// 	image(mathDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
+	// else if (digitToShow == 2)
+	// {
+	// 	image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
+	// else if (digitToShow == 1)
+	// {
+	// 	image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
+	// else if (digitToShow == 0)
+	// {
+	// 	image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// 	digitToShow = digitToShow - 1;
 		
-	}
+	// }
+	// // NEW NEW NEW 
+	// else if (digitToShow == -1)
+	// {
+	// 	//gameOver == true;
+	// 	text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+	// }
 	
 
 
@@ -327,46 +378,63 @@ function DetermineWhetherToSwitchDigits()
 function SwitchDigits()
 {
 	numPredictions = 0;
+	totalDigitsPassed = 0;
+
 	if (digitToShow == 9)
 	{
 		digitToShow = 8;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 8)
 	{
 		digitToShow = 7;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 7)
 	{
 		digitToShow = 6;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 6)
 	{
 		digitToShow = 5;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 5)
 	{
 		digitToShow = 4;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 4)
 	{
 		digitToShow = 3;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 3)
 	{
 		digitToShow = 2;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 2)
 	{
 		digitToShow = 1;
+		totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 1)
 	{
 		digitToShow = 0;
+		totalDigitsPassed += 1;
 	}
-	else if (digitToShow == 0)
+	else if (digitToShow == 0 && totalDigitsPassed >8 )
 	{
-		digitToShow == 9;
+		gameOver == true;
 	}
+	//else 
+	//{
+	//	gameOver == true;
+
+	//}
+	
 	
 }
 
