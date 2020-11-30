@@ -6,9 +6,6 @@ var controllerOptions = {};
 // create variable for framesof data
 var oneFrameOfData = nj.zeros([5, 4, 6]);
 
-
-
-
 var numPredictions = 0;
 var meanPredictions = 0;
 var hardCodedDigit = 3;
@@ -40,25 +37,32 @@ var digitToShow = 9;
 var timeSinceLastDigitChange = new Date();
 
 
-// SignIn() function
+var list;
+var username;
+
 function SignIn()
 {
 	//console.log('Sign in');
-	var username = document.getElementById('username').value;
-	var list = document.getElementById('users');
-	if (IsNewUser(username,list))
+	username = document.getElementById('username').value;
+	list = document.getElementById('users');
+	if (IsNewUser(username,list) == true)
 	{
 		CreateNewUser(username, list);
 		CreateSignInItem(username, list);
-		
-		//console.log(username);	
+		RecordPoints(username, list);
+		CurrentPoints(username, list);
+			
 	}
 
 	else
 	{
-		var ID = String(username) + "_signins";
-		var listItem = document.getElementById(ID);
+		ID = String(username) + "_signins";
+		listItem = document.getElementById(ID);
 		listItem.innerHTML = parseInt(listItem.innerHTML) + 1;
+		ResetCurrentPoints();
+		//startCounter();
+		
+		// TODO: Insert timer
 	}
 
 	//console.log(list.innerHTML);
@@ -68,34 +72,85 @@ function SignIn()
 function IsNewUser(username, list)
 {
 	//console.log(list.innerHTML);
-	var usernameFound = false;
 	var users = list.children;
+	var usernameFound = false;
 	for (var i = 0; i < users.length; i++)
 	{
 		if (username == users[i].innerHTML)
 		{
 			usernameFound = true;
+			//recordPoints(username, list);
+			//currentPoints(username, list);
 		}
+		
 		//console.log(users[i] + " " + users[i].innerHTML);
 	}
+	
+	newUser = usernameFound == false;
 	return usernameFound == false;
 }
 
 function CreateNewUser(username, list)
 {
 	var item = document.createElement('li');
-	item.id = String(username) + "_name";
 	item.innerHTML = String(username);
+	item.id = String(username) + "_name";
+	
 	list.appendChild(item);
+	//resetCurrentPoints();
 
 }
 
 function CreateSignInItem(username, list)
 {
 	var itemB = document.createElement('li');
-	itemB.id = String(username) + "_signins";
 	itemB.innerHTML = 1;
+	itemB.id = String(username) + "_signins";
+	
 	list.appendChild(itemB);
+}
+
+function RecordPoints(username, list)
+{
+	var itemC = document.createElement('li');
+	itemC.innerHTML = 0;
+	itemC.id = String(username) + "_pr";
+	list.appendChild(itemC);
+}
+
+function CurrentPoints(username, list)
+{
+	var itemD = document.createElement('li');
+	itemD.innerHTML = 0;
+	itemD.id = String(username) + "_currentPoints";
+	list.appendChild(itemD);
+}
+
+function AddPoints()
+{
+	ID = String(username) + "_currentPoints";
+	listItem = document.getElementById(ID);
+	listItem.innerHTML = parseInt(listItem.innerHTML) + 5;
+
+	//IDB = String(username) + "_pr";
+	//listItemB = document.getElementById(IDB);
+
+}
+
+function DeductPoints()
+{
+	ID = String(username) + "_currentPoints";
+	listItem = document.getElementById(ID);
+	listItem.innerHTML = parseInt(listItem.innerHTML) - 1;
+	//console.log(ID);
+	//console.log(listItem);
+}
+
+function ResetCurrentPoints()
+{
+	ID = String(username) + "_currentPoints";
+	listItem = document.getElementById(ID);
+	listItem.innerHTML = 0;
 }
 
 function DetermineState(frame)
@@ -185,15 +240,36 @@ function HandleState2(frame)
 	HandleFrame(frame);
 	DrawLowerRightPanel();
 	DetermineWhetherToSwitchDigits();
+	DrawLowerLeftPanel();
 	//Test();
 }
 
+function DrawLowerLeftPanel()
+{
+	if (newUser = false)
+	{
+		text("Previous Score: ", 0, window.innerHeight/2, window.innerWidth/4,window.innerHeight/4);
+	}
+	else
+	{
+		text("No New Score", 0, window.innerHeight/2, window.innerWidth/4,window.innerHeight/4);
+	}
+
+	ID = String(username) + "_currentPoints";
+	listItem = document.getElementById(ID);
+	IDB = String(username) + "_pr";
+	listItemB = document.getElementById(IDB);
+
+	text("Current score = " + listItem.innerHTML,0,(window.innerHeight/2)+(window.innerHeight/4),window.innerWidth/2,window.innerHeight/8);
+    text("High score = " + listItemB.innerText,0,(window.innerHeight/2)+(window.innerHeight/4)+(window.innerHeight/8),window.innerWidth/2,window.innerHeight/8);
+}
 
 function DrawLowerRightPanel()
 {
 	if (digitToShow == 9)
 	{
 		image(showDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		
 	}
 	else if (digitToShow == 8)
 	{
@@ -231,7 +307,11 @@ function DrawLowerRightPanel()
 	else if (digitToShow == 0)
 	{
 		image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+		
 	}
+	
+
+
 	
 }
 
@@ -285,8 +365,9 @@ function SwitchDigits()
 	}
 	else if (digitToShow == 0)
 	{
-		digitToShow = 9;
+		digitToShow == 9;
 	}
+	
 }
 
 function TimeToSwitchDigits()
@@ -297,13 +378,28 @@ function TimeToSwitchDigits()
 
 	// added if meanPredictions is greater than .55
 	//if (timePassedInSeconds > 5 || meanPredictions > .3)
-	if (timePassedInSeconds > 3 && meanPredictions > .3)
+
+	var count;
+	count = 1;
+	if (timePassedInSeconds > 1 && meanPredictions > .3 && count == 1)
 	{
 		timeSinceLastDigitChange = currentTime;
+		AddPoints();
+		
+		return true;
+		
+		
+	}
+	count = 1;
+	if (timePassedInSeconds > 10 && meanPredictions > 0 && meanPredictions < .07 && count < 2)
+	{
+		DeductPoints();
+		count = 1;
 		return true;
 	}
-}
 
+	
+}
 
 
 function DrawImageToHelpUserPutTheirHandOverTheDevice()
@@ -581,101 +677,6 @@ function HandleBone(boneIndex, boneI, bone, strokeWidth, frame, fingerIndex, int
 }
 
 
-	// if(frame.hands.length == 1 )
-	// {
-	// 	// if statements to indicate darker bones are bones father from hand
-	// 	if(boneIndex == 0)
-	// 	{
-	// 		strokeWidth = 10;
-	// 		r = 240;
-	// 		g = 7;
-	// 		b = 7;
-			
-	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
-	// 	}
-
-	// 	else if(boneIndex == 1)
-	// 	{
-	// 		strokeWidth = 8;
-	// 		r = 204;
-	// 		g = 8;
-	// 		b = 8;
-		
-	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
-	// 	}
-
-	// 	else if(boneIndex == 2)
-	// 	{
-	// 		strokeWidth = 5;
-			
-	// 		r = 143;
-	// 		g = 3;
-	// 		b = 3;	
-
-	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);	
-	// 	}
-
-	// 	else if(boneIndex == 3)
-	// 	{
-	// 		strokeWidth = 5;
-		
-	// 		r = 82;
-	// 		g = 0;
-	// 		b = 0;
-	// 		//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-	// 	}
-	// }
-
-	// if two hands are in frame, the hand turns red
-// 	else if(frame.hands.length == 2)
-// 	{
-// 		// if statements to indicate darker bones are bones father from hand
-// 		if(boneIndex == 0)
-// 		{
-// 			strokeWidth = 10;
-// 			r = 128;
-// 			g = 128;
-// 			b = 128;
-// 			stroke(230*(1-meanPredictions), 210*meanPredictions, 0);
-// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);		
-// 		}
-
-// 		else if(boneIndex == 1)
-// 		{
-// 			strokeWidth = 8;
-// 			r = 96;
-// 			g = 96;
-// 			b = 96;		
-// 			stroke((230*(1-meanPredictions))-50, (210*meanPredictions)-50, 0);
-// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-// 		}
-
-// 		else if(boneIndex == 2)
-// 		{
-// 			strokeWidth = 5;
-// 			r = 64;
-// 			g = 64;
-// 			b = 64;		
-// 			stroke((230*(1-meanPredictions))-100, (210*meanPredictions)-100, 0);
-// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-// 		}
-
-// 		else if(boneIndex == 3)
-// 		{
-// 			strokeWidth = 5;
-// 			r = 32;
-// 			g = 32;
-// 			b = 32;
-// 			stroke((230*(1-meanPredictions))-150, (210*meanPredictions)-150, 0);
-// 			//line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-// 		}
-// 	}
-// 	// give hand color and width
-// 	stroke(r,g,b);
-// 	strokeWeight(strokeWidth);
-// 	// draw those hand lines
-// 	line(canvasXPrev, canvasYPrev, canvasXNext, canvasYNext);
-// }
 
 // train function, go through all iris data and add to knnClassifier
 function Train()
@@ -870,10 +871,6 @@ function Train()
 		features = features.reshape(120).tolist();
 		knnClassifier.addExample(features, 9 );
 
-
-
-		
-
 		//console.log(tensorIterator + " " + features.toString());
 		//
 	}
@@ -974,10 +971,4 @@ function CenterZData()
 	zShift = (0.5 - currentMean);
 	//console.log(currentMean);
 }
-
-
-
-
-
-
 
