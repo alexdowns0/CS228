@@ -41,6 +41,7 @@ var list;
 var username;
 var gameOver = false;
 var totalDigitsPassed;
+var winner = false;
 
 function SignIn()
 {
@@ -53,6 +54,7 @@ function SignIn()
 		CreateSignInItem(username, list);
 		RecordPoints(username, list);
 		CurrentPoints(username, list);
+		
 			
 	}
 
@@ -61,12 +63,15 @@ function SignIn()
 		ID = String(username) + "_signins";
 		listItem = document.getElementById(ID);
 		listItem.innerHTML = parseInt(listItem.innerHTML) + 1;
-		ResetCurrentPoints();
+		ResetCurrentPoints(username, list);
+		//RecordPoints(username, list);
+
+
 		//startCounter();
 		
 		// TODO: Insert timer
 	}
-
+		//ResetCurrentPoints(username, list);
 	//console.log(list.innerHTML);
    return false;
 }
@@ -81,8 +86,9 @@ function IsNewUser(username, list)
 		if (username == users[i].innerHTML)
 		{
 			usernameFound = true;
-			//recordPoints(username, list);
-			//currentPoints(username, list);
+			//RecordPoints(username, list);
+			//CurrentPoints(username, list);
+			//ResetCurrentPoints(username, list);
 		}
 		
 		//console.log(users[i] + " " + users[i].innerHTML);
@@ -99,6 +105,7 @@ function CreateNewUser(username, list)
 	item.id = String(username) + "_name";
 	
 	list.appendChild(item);
+	//ResetCurrentPoints(username, list);
 	//resetCurrentPoints();
 
 }
@@ -110,6 +117,7 @@ function CreateSignInItem(username, list)
 	itemB.id = String(username) + "_signins";
 	
 	list.appendChild(itemB);
+	//ResetCurrentPoints(username, list);
 }
 
 function RecordPoints(username, list)
@@ -134,8 +142,8 @@ function AddPoints()
 	listItem = document.getElementById(ID);
 	listItem.innerHTML = parseInt(listItem.innerHTML) + 5;
 
-	//IDB = String(username) + "_pr";
-	//listItemB = document.getElementById(IDB);
+	IDB = String(username) + "_pr";
+	listItemB = document.getElementById(IDB);
 
 }
 
@@ -146,9 +154,14 @@ function DeductPoints()
 	listItem.innerHTML = parseInt(listItem.innerHTML) - 1;
 	//console.log(ID);
 	//console.log(listItem);
+	//if(listItem.innerHTML > listItemB.innerHTML)
+	//{
+   //     listItemB.innerHTML = parseInt(listItem.innerHTML);
+    //    winner = true;
+   // }
 }
 
-function ResetCurrentPoints()
+function ResetCurrentPoints(username ,list)
 {
 	ID = String(username) + "_currentPoints";
 	listItem = document.getElementById(ID);
@@ -248,28 +261,35 @@ function HandleState2(frame)
 
 function DrawLowerLeftPanel()
 {
-	if (newUser = false)
-	{
-		text("Previous Score: ", 0, window.innerHeight/2, window.innerWidth/4,window.innerHeight/4);
-	}
-	else
-	{
-		text("No New Score", 0, window.innerHeight/2, window.innerWidth/4,window.innerHeight/4);
-	}
+	//if (newUser == false)
+	//{
+	//	text("Previous Score: ", 0, window.innerHeight/2, window.innerWidth/4,window.innerHeight/4);
+	///}
+	//else
+	//{
+	//	text("No New Score", 0, window.innerHeight/2, window.innerWidth/4,window.innerHeight/4);
+	//}
 
 	ID = String(username) + "_currentPoints";
 	listItem = document.getElementById(ID);
 	IDB = String(username) + "_pr";
 	listItemB = document.getElementById(IDB);
 
-	text("Current score = " + listItem.innerHTML,0,(window.innerHeight/2)+(window.innerHeight/4),window.innerWidth/2,window.innerHeight/8);
-    text("High score = " + listItemB.innerText,0,(window.innerHeight/2)+(window.innerHeight/4)+(window.innerHeight/8),window.innerWidth/2,window.innerHeight/8);
+	textSize(20);
+	fill(255,255,255);
+	text("Your Score: " + listItem.innerHTML,20,(window.innerHeight/2)+(window.innerHeight/4),window.innerWidth/2,window.innerHeight/8);
+    text("Best Score: " + listItemB.innerText,20,(window.innerHeight/2)+(window.innerHeight/4)+(window.innerHeight/8),window.innerWidth/2,window.innerHeight/8);
+
+
 }
+
+
 
 function DrawLowerRightPanel()
 {
 	// add a switch cas statement 
 	// console 
+    
 	switch(digitToShow)
 	{
 		case 9:
@@ -301,69 +321,17 @@ function DrawLowerRightPanel()
 		case 1: 
 		image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 		break;
+
 		case 0: 
 		image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		digitToShow = digitToShow - 1;
+		digitToShow -= 1;
 		break;
 
 		default:
 		text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 
 	}
-	//if (digitToShow == 9)
-	//{
-	//	image(showDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	//	
-	//}
-	// else if (digitToShow == 8)
-	// {
-	// 	image(showDigit8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	// else if (digitToShow == 7)
-	// {
-	// 	image(showDigit7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	// else if (digitToShow == 6)
-	// {
-	// 	image(mathDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	// else if (digitToShow == 5)
-	// {
-	// 	image(mathDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	// else if (digitToShow == 4)
-	// {
-	// 	image(showDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
 
-	// }
-	// else if (digitToShow == 3)
-	// {
-	// 	image(mathDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	// else if (digitToShow == 2)
-	// {
-	// 	image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	// else if (digitToShow == 1)
-	// {
-	// 	image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	// else if (digitToShow == 0)
-	// {
-	// 	image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// 	digitToShow = digitToShow - 1;
-		
-	// }
-	// // NEW NEW NEW 
-	// else if (digitToShow == -1)
-	// {
-	// 	//gameOver == true;
-	// 	text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-	// }
-	
-
-
-	
 }
 
 function DetermineWhetherToSwitchDigits()
@@ -383,63 +351,64 @@ function SwitchDigits()
 	if (digitToShow == 9)
 	{
 		digitToShow = 8;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 8)
 	{
 		digitToShow = 7;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 7)
 	{
 		digitToShow = 6;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 6)
 	{
 		digitToShow = 5;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 5)
 	{
 		digitToShow = 4;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 4)
 	{
 		digitToShow = 3;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 3)
 	{
 		digitToShow = 2;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 2)
 	{
 		digitToShow = 1;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
 	else if (digitToShow == 1)
 	{
 		digitToShow = 0;
-		totalDigitsPassed += 1;
+		//totalDigitsPassed += 1;
 	}
-	else if (digitToShow == 0 && totalDigitsPassed >8 )
+	else if (digitToShow == 0 )
+	{
+		digitToShow == -1;
+	}
+
+	else if (digitToShow == -1)
 	{
 		gameOver == true;
 	}
-	//else 
-	//{
-	//	gameOver == true;
 
-	//}
-	
 	
 }
 
 function TimeToSwitchDigits()
 {
+	
 	var currentTime = new Date();
 	var timePassedInMilliseconds = currentTime - timeSinceLastDigitChange;
 	var timePassedInSeconds = timePassedInMilliseconds/1000.0;
@@ -464,9 +433,7 @@ function TimeToSwitchDigits()
 		DeductPoints();
 		count = 1;
 		return true;
-	}
-
-	
+	}	
 }
 
 
