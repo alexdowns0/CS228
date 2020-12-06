@@ -21,10 +21,18 @@ var showApple2;
 var showApple3;
 // interimvid1 variables
 var mathDigit0;
-var mathDigit6;
-var mathDigit5;
 var mathDigit1;
+var mathDigit2;
 var mathDigit3;
+var mathDigit4;
+var mathDigit5;
+var mathDigit6;
+var mathDigit7;
+var mathDigit8;
+var mathDigit9;
+
+
+
 
 function setup() 
 { 
@@ -53,10 +61,18 @@ function setup()
 	showApple3 = loadImage('https://i.imgur.com/WsAM1d8.jpg');
 	// interimvid1 variables
 	mathDigit0 = loadImage('https://i.imgur.com/C2OkqwF.png');
-	mathDigit6 = loadImage('https://i.imgur.com/Po6qVFS.png');
-	mathDigit5 = loadImage('https://i.imgur.com/NSdAleR.png');
 	mathDigit1 = loadImage('https://i.imgur.com/4oTPMEa.png');
+	mathDigit2 = loadImage('https://i.imgur.com/itzAzgO.png');
 	mathDigit3 = loadImage('https://i.imgur.com/fpECQDU.png');
+	mathDigit4 = loadImage('https://i.imgur.com/ByJJluH.png');
+	mathDigit5 = loadImage('https://i.imgur.com/NSdAleR.png');
+	mathDigit6 = loadImage('https://i.imgur.com/Po6qVFS.png');
+	mathDigit7 = loadImage('https://i.imgur.com/9onBFWv.png');
+	mathDigit8 = loadImage('https://i.imgur.com/AUbMZ3D.png');
+	mathDigit9 = loadImage('https://i.imgur.com/GChowzG.png');
+	
+
+	;
 
 
 

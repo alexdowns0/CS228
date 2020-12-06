@@ -43,6 +43,45 @@ var gameOver = false;
 var totalDigitsPassed;
 var winner = false;
 
+var mathMode = false;
+
+
+function SignIn2()
+{
+	username = document.getElementById('username').value;
+	list = document.getElementById('users');
+	if (IsNewUser(username,list) == true)
+	{
+		CreateNewUser(username, list);
+		CreateSignInItem(username, list);
+		RecordPoints(username, list);
+		CurrentPoints(username, list);
+		
+			
+	}
+
+	else
+	{
+		ID = String(username) + "_signins";
+		listItem = document.getElementById(ID);
+		listItem.innerHTML = parseInt(listItem.innerHTML) + 1;
+		ResetCurrentPoints(username, list);
+		//RecordPoints(username, list);
+
+
+		//startCounter();
+		
+		// TODO: Insert timer
+	}
+		//ResetCurrentPoints(username, list);
+	//console.log(list.innerHTML);
+	mathMode = true;
+   return false;
+}
+
+
+
+
 function SignIn()
 {
 	//console.log('Sign in');
@@ -178,9 +217,13 @@ function DetermineState(frame)
 	{
 		programState = 1;
 	}
-	else
+	else if (mathMode == true)
 	{
-		programState = 2;
+		programState = 3;
+	}
+	else 
+	{
+		programState = 2; 
 	}
 
 }
@@ -249,6 +292,16 @@ function DrawArrowUp()
 	image(imgDown, window.innerWidth/2, 0, window.innerWidth/2, window.innerHeight/2);
 }
 
+function HandleState3(frame)
+{
+
+	HandleFrame(frame);
+	DrawLowerRightPanel();
+	DetermineWhetherToSwitchDigits();
+	DrawLowerLeftPanel();
+	//Test();
+}
+
 function HandleState2(frame)
 {
 
@@ -279,57 +332,126 @@ function DrawLowerLeftPanel()
 	fill(255,255,255);
 	text("Your Score: " + listItem.innerHTML,20,(window.innerHeight/2)+(window.innerHeight/4),window.innerWidth/2,window.innerHeight/8);
     text("Best Score: " + listItemB.innerText,20,(window.innerHeight/2)+(window.innerHeight/4)+(window.innerHeight/8),window.innerWidth/2,window.innerHeight/8);
+    text("ldowns1 Best Score: " + 20,(window.innerHeight/2)+(window.innerHeight/4),(window.innerHeight/8),window.innerWidth/2,window.innerHeight/8);
 
 
 }
-
 
 
 function DrawLowerRightPanel()
 {
 	// add a switch cas statement 
 	// console 
-    
-	switch(digitToShow)
+
+	if (mathMode == true)
 	{
-		case 9:
-		image(showDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
+    
+		switch(digitToShow)
+		{
+			case 9:
+			image(mathDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
 
-		case 8: 
-		image(showDigit8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
+			case 8: 
+			image(mathDigit8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
 
-		case 7:
-		image(showDigit7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
-		case 6: 
-		image(mathDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
-		case 5:
-		image(mathDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
-		case 4:
-		image(showDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
-		case 3:
-		image(mathDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
-		case 2:
-		image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
-		case 1: 
-		image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		break;
+			case 7:
+			image(mathDigit7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 6: 
+			image(mathDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 5:
+			image(mathDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 4:
+			image(mathDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 3:
+			image(mathDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 2:
+			image(mathDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 1: 
+			image(mathDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
 
-		case 0: 
-		image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
-		digitToShow -= 1;
-		break;
+			case 0: 
+			image(mathDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			digitToShow -= 1;
+			break;
 
-		default:
-		text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			case -1: 
+			text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			digitToShow -= 1;
+			break;
 
+			case -2:
+			text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+
+			default:
+			text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+
+		}
+	}
+	else if (mathMode == false)
+	{
+
+		switch(digitToShow)
+		{
+			case 9:
+			image(showDigit9, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+
+			case 8: 
+			image(showDigit8, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+
+			case 7:
+			image(showDigit7, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 6: 
+			image(showDigit6, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 5:
+			image(showDigit5, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 4:
+			image(showDigit4, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 3:
+			image(showDigit3, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 2:
+			image(showDigit2, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+			case 1: 
+			image(showDigit1, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+
+			case 0: 
+			image(showDigit0, window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			digitToShow-=1;
+			break;
+
+			case -1: 
+			text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			digitToShow -= 1;
+			break;
+
+			case -2:
+			text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+			break;
+
+			default:
+			text("game over", window.innerWidth/2, window.innerHeight/2, window.innerWidth/2, window.innerHeight/2);
+
+
+		}
+		
 	}
 
 }
@@ -400,10 +522,13 @@ function SwitchDigits()
 
 	else if (digitToShow == -1)
 	{
-		gameOver == true;
+		digitToShow == -2;
 	}
 
-	
+	else if (digitToShow == -2)
+	{
+		gameOver == true;
+	}
 }
 
 function TimeToSwitchDigits()
@@ -413,6 +538,9 @@ function TimeToSwitchDigits()
 	var timePassedInMilliseconds = currentTime - timeSinceLastDigitChange;
 	var timePassedInSeconds = timePassedInMilliseconds/1000.0;
 
+	var currentTime2 = new Date();
+	var timePassedInMilliseconds2 = currentTime2 - timeSinceLastDigitChange;
+	var timePassedInSeconds2 = timePassedInMilliseconds2/1000.0;
 	// added if meanPredictions is greater than .55
 	//if (timePassedInSeconds > 5 || meanPredictions > .3)
 
@@ -427,11 +555,11 @@ function TimeToSwitchDigits()
 		
 		
 	}
+	timePassedInSeconds -= 20;
 	count = 1;
-	if (timePassedInSeconds > 10 && meanPredictions > 0 && meanPredictions < .07 && count < 2)
+	if (timePassedInSeconds2 > 10 && meanPredictions > 0 && meanPredictions < .07 && count < 2)
 	{
 		DeductPoints();
-		count = 1;
 		return true;
 	}	
 }
@@ -452,11 +580,8 @@ function HandIsUncentered()
 	}
 	else 
 	{
-		return false;
-		
+		return false;	
 	}
-
-	//return HandIsTooFarToTheLeft();
 }
 
 
@@ -571,6 +696,11 @@ Leap.loop(controllerOptions, function(frame)
 		
 	}
 
+	else if (programState == 3)
+	{
+		HandleState3(frame);
+	}
+
 	else 
 	{
 		HandleState2(frame);
@@ -582,9 +712,6 @@ Leap.loop(controllerOptions, function(frame)
 function GotResults(err, result)
 {
 	//predictedClassLabels.set(parseInt(result.label));
-
-
-	
 	//var currentPredictions = parseInt(result.label);
 	//console.log(result.label);
 	
@@ -618,7 +745,6 @@ function HandleFrame(frame)
 		Test();
 		//console.log(oneFrameOfData.toString());
 
-		
 	}
 }
 
@@ -681,9 +807,7 @@ function HandleBone(boneIndex, boneI, bone, strokeWidth, frame, fingerIndex, int
 	
 	//var width = 4;
 	// if one hand is in frame, the hand is green
-
-
-//Determine strokeWeight
+	///Determine strokeWeight
 	var width = 6;
 
 	if (boneIndex == 0)
